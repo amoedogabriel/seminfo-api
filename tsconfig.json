@@ -12,6 +12,6 @@
     "noUnusedParameters": true,
     "strictFunctionTypes": true
   },
-  "include": ["src"],
+  "include": ["src", "tests"],
   "exclude": ["node_modules", "dist"]
 }

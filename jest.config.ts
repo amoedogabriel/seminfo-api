@@ -124,7 +124,7 @@ export default {
   //rootDir: '<rootDir>/tests/*',
 
   // A list of paths to directories that Jest should use to search for files in
-  roots: ['<rootDir>/tests/*'],
+  roots: ['<rootDir>/tests'],
 
   // Allows you to use a custom runner instead of Jest's default test runner
   // runner: "jest-runner",
@@ -169,7 +169,7 @@ export default {
 
   // A map from regular expressions to paths to transformers
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
+    '.+\\.ts$': 'ts-jest',
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
