@@ -34,6 +34,13 @@ describe('DbAddAccount', () => {
     });
   });
 
+  it('Should throw if AddAccountRepository throws', async () => {
+    const { sut, addAccountRepository } = makeSut();
+    jest.spyOn(addAccountRepository, 'addAccount').mockReturnValueOnce(Promise.reject(new Error()));
+    const promise = sut.add(makeFakeAddAccountData());
+    expect(promise).rejects.toThrow();
+  });
+
   it('Should call Hasher with correct password', async () => {
     const { sut, hasher } = makeSut();
     const hashSpy = jest.spyOn(hasher, 'hash');
