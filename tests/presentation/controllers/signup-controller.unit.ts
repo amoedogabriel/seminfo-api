@@ -1,8 +1,8 @@
-import { AddAccount } from '../../../src/domain/use-cases/add-account';
-import { SignUpControler } from '../../../src/presentation/controllers/signup-controller';
-import { ok, serveError } from '../../../src/presentation/helper/http/http-helper';
-import { makeFakeAddAccountData } from '../../helper/make-fake-add-account-data';
-import { AddAccountStub } from '../test/mock-add-acount';
+import { AddAccount } from '@domain/use-cases';
+import { SignUpControler } from '@presentation/controllers/signup-controller';
+import { serveError, ok } from '@presentation/helper/http/http-helper';
+import { makeFakeAddAccountData } from '@tests/helper/make-fake-add-account-data';
+import { AddAccountStub } from '@tests/presentation/test/mock-add-acount';
 
 const addAccountBody = {
   body: makeFakeAddAccountData(),

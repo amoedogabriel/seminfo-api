@@ -1,8 +1,8 @@
+import { MongoHelper } from '@infra/helper';
+import { makeFakeAddAccountData } from '@tests/helper/make-fake-add-account-data';
+import app from '@main/config/app';
+import env from '@main/config/env';
 import { Collection } from 'mongodb';
-import { MongoHelper } from '../../../src/infra/helper/mongo-helper';
-import { makeFakeAddAccountData } from '../../helper/make-fake-add-account-data';
-import env from '../../../src/main/config/env';
-import app from '../../../src/main/config/app';
 import request from 'supertest';
 
 let accountCollection: Collection;

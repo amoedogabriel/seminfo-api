@@ -1,5 +1,5 @@
-import { ServeError } from '../../errors/server-error';
-import { HttpResponse } from '../../protocols/http';
+import { ServeError } from '@presentation/errors/server-error';
+import { HttpResponse } from '@presentation/protocols';
 
 export const serveError = (error: Error): HttpResponse => {
   return {

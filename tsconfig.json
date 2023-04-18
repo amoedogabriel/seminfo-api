@@ -10,7 +10,16 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "strictFunctionTypes": true
+    "strictFunctionTypes": true,
+    "baseUrl": ".",
+    "paths": {
+      "@data/*": ["src/data/*"],
+      "@domain/*": ["src/domain/*"],
+      "@infra/*": ["src/infra/*"],
+      "@main/*": ["src/main/*"],
+      "@presentation/*": ["src/presentation/*"],
+      "@tests/*": ["tests/*"]
+    }
   },
   "include": ["src", "tests"],
   "exclude": ["node_modules", "dist"]

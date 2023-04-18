@@ -1,4 +1,4 @@
-import { AccountModel } from '../../src/domain/models/account';
+import { AccountModel } from '@domain/models';
 
 export const makeFakeAddAccountResult = (): AccountModel => {
   return {

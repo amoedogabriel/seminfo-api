@@ -1,4 +1,4 @@
-import { MongoHelper } from '../../../src/infra/helper/mongo-helper';
+import { MongoHelper } from '@infra/helper';
 
 describe('Mongo Helper', () => {
   const sut = MongoHelper;

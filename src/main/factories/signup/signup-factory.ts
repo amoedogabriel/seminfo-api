@@ -1,7 +1,7 @@
-import { DbAddAccount } from '../../../data/use-cases/db-add-account';
-import { BCryptAdapter } from '../../../infra/cryptography/bcrypt-adapter';
-import { AccountMongoRepository } from '../../../infra/db/account-mongo-repository';
-import { SignUpControler } from '../../../presentation/controllers/signup-controller';
+import { DbAddAccount } from '@data/use-cases';
+import { BCryptAdapter } from '@infra/cryptography';
+import { AccountMongoRepository } from '@infra/db';
+import { SignUpControler } from '@presentation/controllers/signup-controller';
 
 export const makeSignupController = (): SignUpControler => {
   const salt = 12;

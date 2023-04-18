@@ -1,10 +1,10 @@
-import { Hasher } from '../../../src/data/protocols/cryptography/hasher';
-import { AddAccountRepository } from '../../../src/data/protocols/db/add-account-repository';
-import { DbAddAccount } from '../../../src/data/use-cases/db-add-account';
-import { makeFakeAddAccountData } from '../../helper/make-fake-add-account-data';
-import { makeFakeAddAccountResult } from '../../helper/make-fake-add-account-result';
+import { Hasher } from '@data/protocols/cryptography';
+import { AddAccountRepository } from '@data/protocols/db';
+import { DbAddAccount } from '@data/use-cases';
+import { makeFakeAddAccountData } from '@tests/helper/make-fake-add-account-data';
+import { makeFakeAddAccountResult } from '@tests/helper/make-fake-add-account-result';
 import { AddAccountRepositoryStub } from '../test/mock-add-account-repository';
-import { HasherStub } from '../test/mock-hasher';
+import { HasherStub } from '@tests/data/test/mock-hasher';
 
 type SutTypes = {
   sut: DbAddAccount;
