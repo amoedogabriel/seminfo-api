@@ -2,6 +2,7 @@ import { Hasher } from '../../../src/data/protocols/cryptography/hasher';
 import { AddAccountRepository } from '../../../src/data/protocols/db/add-account-repository';
 import { DbAddAccount } from '../../../src/data/use-cases/db-add-account';
 import { makeFakeAddAccountData } from '../../helper/make-fake-add-account-data';
+import { makeFakeAddAccountResult } from '../../helper/make-fake-add-account-result';
 import { AddAccountRepositoryStub } from '../test/mock-add-account-repository';
 import { HasherStub } from '../test/mock-hasher';
 
@@ -53,5 +54,19 @@ describe('DbAddAccount', () => {
     jest.spyOn(hasher, 'hash').mockReturnValueOnce(Promise.reject(new Error()));
     const promise = sut.add(makeFakeAddAccountData());
     expect(promise).rejects.toThrow();
+  });
+
+  it('Should return an account on success ', async () => {
+    const { sut, addAccountRepository } = makeSut();
+    jest
+      .spyOn(addAccountRepository, 'addAccount')
+      .mockReturnValueOnce(Promise.resolve(makeFakeAddAccountResult()));
+    const accountData = makeFakeAddAccountData();
+    const accountResult = await sut.add(accountData);
+    expect(accountResult).toBeTruthy();
+    expect(accountResult.id).toBeTruthy();
+    expect(accountResult.name).toBe(accountData.name);
+    expect(accountResult.email).toBe(accountData.email);
+    expect(accountResult.password).toBe(accountData.password);
   });
 });
