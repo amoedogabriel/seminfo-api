@@ -1,5 +1,5 @@
 import { AddAccount } from '../../domain/use-cases/add-account';
-import { serveError } from '../helper/http/http-helper';
+import { serveError, ok } from '../helper/http/http-helper';
 import { Controller } from '../protocols/controller';
 import { HttpRequest, HttpResponse } from '../protocols/http';
 
@@ -11,9 +11,9 @@ export class SignUpControler implements Controller {
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       await this.addAccount.add(httpRequest.body);
+      return ok(httpRequest.body);
     } catch (error) {
       return serveError(error);
     }
-    return null;
   }
 }
