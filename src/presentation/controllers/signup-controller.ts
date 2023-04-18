@@ -1,4 +1,5 @@
 import { AddAccount } from '../../domain/use-cases/add-account';
+import { serveError } from '../helper/http/http-helper';
 import { Controller } from '../protocols/controller';
 import { HttpRequest, HttpResponse } from '../protocols/http';
 
@@ -8,7 +9,11 @@ export class SignUpControler implements Controller {
     this.addAccount = addAccount;
   }
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-    await this.addAccount.add(httpRequest.body);
+    try {
+      await this.addAccount.add(httpRequest.body);
+    } catch (error) {
+      return serveError(error);
+    }
     return null;
   }
 }
