@@ -10,8 +10,8 @@ export class SignUpControler implements Controller {
   }
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      await this.addAccount.add(httpRequest.body);
-      return ok(httpRequest.body);
+      const httpResponse = await this.addAccount.add(httpRequest.body);
+      return ok(httpResponse);
     } catch (error) {
       return serveError(error);
     }
