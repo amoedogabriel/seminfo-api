@@ -11,4 +11,11 @@ describe('BCryptAdapter', () => {
     await sut.hash(password);
     expect(hashSpy).toHaveBeenCalledWith(password, salt);
   });
+
+  it('Should return a hashed password on hash success', async () => {
+    const sut = new BCryptAdapter(salt);
+    const hashResult = await sut.hash(password);
+    const compare = await bcrypt.compare(password, hashResult);
+    expect(compare).toBeTruthy();
+  });
 });
