@@ -1,6 +1,6 @@
 import { AddAccount } from '../../../src/domain/use-cases/add-account';
 import { SignUpControler } from '../../../src/presentation/controllers/signup-controller';
-import { serveError } from '../../../src/presentation/helper/http/http-helper';
+import { ok, serveError } from '../../../src/presentation/helper/http/http-helper';
 import { makeFakeAddAccountData } from '../../helper/make-fake-add-account-data';
 import { AddAccountStub } from '../test/mock-add-acount';
 
@@ -32,5 +32,11 @@ describe('SignUpControler', () => {
     jest.spyOn(addAccount, 'add').mockRejectedValueOnce(new Error());
     const httpResponse = await sut.handle(addAccountBody);
     expect(httpResponse).toEqual(serveError(httpResponse.body.stack));
+  });
+
+  it('Should return 200 if AddAccount succeeds', async () => {
+    const { sut } = makeSut();
+    const httpResponse = await sut.handle(addAccountBody);
+    expect(httpResponse).toEqual(ok(httpResponse.body));
   });
 });
