@@ -8,4 +8,12 @@ describe('contentType', () => {
     });
     await request(app).get('/test-content-type').expect('content-type', /json/);
   });
+
+  it('Should return xml content when force', async () => {
+    app.get('/test-content-type-xml', (_req, res) => {
+      res.type('xml');
+      res.send('');
+    });
+    await request(app).get('/test-content-type-xml').expect('content-type', /xml/);
+  });
 });
