@@ -6,18 +6,18 @@ import { AddAccount } from '@domain/use-cases';
 export class DbAddAccount implements AddAccount {
   private readonly hasher: Hasher;
   private readonly addAccountRepository: AddAccountRepository;
-  private readonly loadAccountByEmail: LoadAccountByEmailRepository;
+  private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository;
   constructor(
     hasher: Hasher,
     addAccountRepository: AddAccountRepository,
-    loadAccountByEmail: LoadAccountByEmailRepository
+    loadAccountByEmailRepository: LoadAccountByEmailRepository
   ) {
     this.addAccountRepository = addAccountRepository;
     this.hasher = hasher;
-    this.loadAccountByEmail = loadAccountByEmail;
+    this.loadAccountByEmailRepository = loadAccountByEmailRepository;
   }
   async add(account: AddAccountModel): Promise<AccountModel> {
-    const dbAccount = await this.loadAccountByEmail.loadByEmail(account.email);
+    const dbAccount = await this.loadAccountByEmailRepository.loadByEmail(account.email);
     if (!dbAccount) {
       const hashedPassword = await this.hasher.hash(account.password);
       const accountResult = await this.addAccountRepository.addAccount({
