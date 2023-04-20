@@ -1,6 +1,6 @@
 import { InvalidParamError } from '@presentation/errors';
-import { Validation } from '@presentation/protocols/validation';
-import { PasswordValidator } from '@validation/protocols/password-validator';
+import { Validation } from '@presentation/protocols';
+import { PasswordValidator } from '@validation/protocols';
 
 export class PasswordValidation implements Validation {
   private readonly fieldName: string;

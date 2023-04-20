@@ -1,11 +1,10 @@
 import { AddAccount } from '@domain/use-cases';
 import { SignUpControler } from '@presentation/controllers/signup-controller';
-import { serveError, ok, badRequest, forbidden } from '@presentation/helper/http/http-helper';
-import { Validation } from '@presentation/protocols/validation';
-import { AddAccountStub } from '@tests/presentation/test/mock-add-acount';
-import { ValidationStub } from '@tests/presentation/test/mock-validation';
-import { EmailInUseError, MissingParamError } from '@presentation/errors';
-import { makeFakeAccountRequest } from '@tests/helper/make-fake-account-request';
+import { MissingParamError, EmailInUseError } from '@presentation/errors';
+import { serveError, badRequest, forbidden, ok } from '@presentation/helper/http/http-helper';
+import { Validation } from '@presentation/protocols';
+import { makeFakeAccountRequest } from '@tests/helper';
+import { AddAccountStub, ValidationStub } from '@tests/presentation/test';
 
 type SutTypes = {
   sut: SignUpControler;

@@ -1,6 +1,6 @@
-import { StrongPasswordValidatorAdapter } from '@infra/validators/strong-password-validator-adapter';
+import { StrongPasswordValidatorAdapter } from '@infra/validators';
 import { InvalidParamError } from '@presentation/errors';
-import { PasswordValidation } from '@validation/validators/password-validation';
+import { PasswordValidation } from '@validation/validators';
 
 describe('PasswordValidation', () => {
   it('Should return InvalidParamError if Validation fails ', () => {

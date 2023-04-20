@@ -1,6 +1,6 @@
-import { EmailValidatorAdapter } from '@infra/validators/email-validator-adapter';
+import { EmailValidatorAdapter } from '@infra/validators';
 import { InvalidParamError } from '@presentation/errors';
-import { EmailValidation } from '@validation/validators/email-validation';
+import { EmailValidation } from '@validation/validators';
 
 describe('EmailValidation', () => {
   it('Should return InvalidParamError if Validation fails', () => {

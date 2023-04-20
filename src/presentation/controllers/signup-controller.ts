@@ -1,8 +1,7 @@
 import { AddAccount } from '@domain/use-cases';
-import { EmailInUseError } from '@presentation/errors/email-in-use-error';
-import { serveError, ok, badRequest, forbidden } from '@presentation/helper/http/http-helper';
-import { Controller, HttpRequest, HttpResponse } from '@presentation/protocols';
-import { Validation } from '@presentation/protocols/validation';
+import { EmailInUseError } from '@presentation/errors';
+import { badRequest, forbidden, serveError, ok } from '@presentation/helper/http/http-helper';
+import { Controller, Validation, HttpRequest, HttpResponse } from '@presentation/protocols';
 
 export class SignUpControler implements Controller {
   private readonly addAccount: AddAccount;

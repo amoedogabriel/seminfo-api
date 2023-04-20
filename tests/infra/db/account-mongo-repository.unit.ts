@@ -1,6 +1,6 @@
 import { AccountMongoRepository } from '@infra/db';
 import { MongoHelper } from '@infra/helper';
-import { makeFakeAddAccountData } from '@tests/helper/make-fake-add-account-data';
+import { makeFakeAddAccountData } from '@tests/helper';
 import { Collection } from 'mongodb';
 
 let accountCollection: Collection;

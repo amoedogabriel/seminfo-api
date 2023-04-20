@@ -1,5 +1,5 @@
 import { InvalidParamError } from '@presentation/errors';
-import { CompareFieldValidation } from '@validation/validators/compare-field-validation';
+import { CompareFieldValidation } from '@validation/validators';
 
 describe('CompareFieldValidation', () => {
   it('Should return InvalidParamError if Validation fails ', () => {
