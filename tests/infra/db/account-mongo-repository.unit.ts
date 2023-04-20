@@ -15,7 +15,7 @@ describe('AccountMongoRepository', () => {
   });
 
   beforeEach(async () => {
-    accountCollection = await MongoHelper.getCollection('accounts');
+    accountCollection = await MongoHelper.getCollection('account');
     accountCollection.deleteMany({});
   });
 
@@ -23,6 +23,18 @@ describe('AccountMongoRepository', () => {
     const sut = new AccountMongoRepository();
     const accountData = makeFakeAddAccountData();
     const account = await sut.addAccount(accountData);
+    expect(account).toBeTruthy();
+    expect(account.id).toBeTruthy();
+    expect(account.name).toEqual(accountData.name);
+    expect(account.email).toEqual(account.email);
+    expect(account.password).toEqual(account.password);
+  });
+
+  it('Should return an account on load by email success', async () => {
+    const sut = new AccountMongoRepository();
+    const accountData = makeFakeAddAccountData();
+    await sut.addAccount(accountData);
+    const account = await sut.loadByEmail(accountData.email);
     expect(account).toBeTruthy();
     expect(account.id).toBeTruthy();
     expect(account.name).toEqual(accountData.name);
