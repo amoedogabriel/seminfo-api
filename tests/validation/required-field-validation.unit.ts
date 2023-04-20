@@ -1,5 +1,5 @@
 import { MissingParamError } from '@presentation/errors';
-import { RequiredFieldValidation } from '@validation/required-field-validation';
+import { RequiredFieldValidation } from '@validation/validators/required-field-validation';
 
 describe('RequiredFieldValidation', () => {
   it('Should return null if field is valid ', () => {

@@ -1,7 +1,6 @@
-import { Validation } from "@presentation/protocols/validation";
-import { RequiredFieldValidation } from "@validation/required-field-validation";
-import { ValidationComposite } from "@validation/validation-composite";
-
+import { Validation } from '@presentation/protocols/validation';
+import { RequiredFieldValidation } from '@validation/validators/required-field-validation';
+import { ValidationComposite } from '@validation/validators/validation-composite';
 
 export const makeSignupValidation = (): ValidationComposite => {
   const validations: Validation[] = [];
@@ -9,6 +8,6 @@ export const makeSignupValidation = (): ValidationComposite => {
   for (const field of requiredFields) {
     validations.push(new RequiredFieldValidation(field));
   }
- 
+
   return new ValidationComposite(validations);
 };
