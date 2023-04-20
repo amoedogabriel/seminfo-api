@@ -10,4 +10,12 @@ describe('EmailValidation', () => {
     const validate = sut.validate({ field: invalidEmail });
     expect(validate).toEqual(new InvalidParamError('field'));
   });
+
+  it('Should return null if Validation succeeds', () => {
+    const emailValidator = new EmailValidatorAdapter();
+    const invalidEmail = 'valid_email@mail.com';
+    const sut = new EmailValidation('field', emailValidator);
+    const validate = sut.validate({ field: invalidEmail });
+    expect(validate).toBeNull();
+  });
 });
