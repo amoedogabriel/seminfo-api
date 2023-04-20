@@ -48,6 +48,13 @@ describe('DbAuthentication', () => {
     expect(encryptSpy).toHaveBeenCalledWith('any_id');
   });
 
+  it('Should throw if Encrypter throws', async () => {
+    const { sut, encrypter } = makeSut();
+    jest.spyOn(encrypter, 'encrypt').mockReturnValueOnce(Promise.reject(new Error()));
+    const promise = sut.auth(makeFakeAuthenticationData());
+    expect(promise).rejects.toThrow();
+  });
+
   it('Should call UpdateAccessToken with correct value', async () => {
     const { sut, updateAccessToken } = makeSut();
     const updateTokenSpy = jest.spyOn(updateAccessToken, 'updateAccessToken');
