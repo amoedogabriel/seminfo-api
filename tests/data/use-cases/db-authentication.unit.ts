@@ -34,6 +34,13 @@ describe('DbAuthentication', () => {
     expect(loadByEmailSpy).toHaveBeenCalledWith(makeFakeAuthenticationData().email);
   });
 
+  it('Should throw if LoadAccountByEmail throws', async () => {
+    const { sut, loadAccountByEmail } = makeSut();
+    jest.spyOn(loadAccountByEmail, 'loadByEmail').mockReturnValueOnce(Promise.reject(new Error()));
+    const promise = sut.auth(makeFakeAuthenticationData());
+    expect(promise).rejects.toThrow();
+  });
+
   it('Should call Encrypter with correct value', async () => {
     const { sut, encrypter } = makeSut();
     const encryptSpy = jest.spyOn(encrypter, 'encrypt');
