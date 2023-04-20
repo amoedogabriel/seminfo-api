@@ -81,4 +81,13 @@ describe('DbAddAccount', () => {
     await sut.add(makeFakeAddAccountData());
     expect(loadAccountSpy).toHaveBeenCalledWith(makeFakeAddAccountData().email);
   });
+
+  it('Should return null if LoadAccountByEmail returns an account', async () => {
+    const { sut, loadAccountByEmail } = makeSut();
+    jest
+      .spyOn(loadAccountByEmail, 'loadByEmail')
+      .mockReturnValueOnce(Promise.resolve(makeFakeAddAccountResult()));
+    const account = await sut.add(makeFakeAddAccountData());
+    expect(account).toBeNull();
+  });
 });
