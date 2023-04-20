@@ -1,10 +1,10 @@
 import { AddAccount } from '@domain/use-cases';
 import { SignUpControler } from '@presentation/controllers/signup-controller';
-import { serveError, ok, badRequest } from '@presentation/helper/http/http-helper';
+import { serveError, ok, badRequest, forbidden } from '@presentation/helper/http/http-helper';
 import { Validation } from '@presentation/protocols/validation';
 import { AddAccountStub } from '@tests/presentation/test/mock-add-acount';
 import { ValidationStub } from '@tests/presentation/test/mock-validation';
-import { MissingParamError } from '@presentation/errors';
+import { EmailInUseError, MissingParamError } from '@presentation/errors';
 import { makeFakeAccountRequest } from '@tests/helper/make-fake-account-request';
 
 type SutTypes = {
@@ -58,5 +58,12 @@ describe('SignUpControler', () => {
     jest.spyOn(validation, 'validate').mockReturnValueOnce(new MissingParamError('field_name'));
     const httpResponse = await sut.handle(makeFakeAccountRequest());
     expect(httpResponse).toEqual(badRequest(new MissingParamError('field_name')));
+  });
+
+  it('Should return 403 if AddAccount returns null', async () => {
+    const { sut, addAccount } = makeSut();
+    jest.spyOn(addAccount, 'add').mockReturnValueOnce(null);
+    const account = await sut.handle(makeFakeAccountRequest());
+    expect(account).toEqual(forbidden(new EmailInUseError()));
   });
 });
