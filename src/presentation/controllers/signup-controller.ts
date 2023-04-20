@@ -1,5 +1,5 @@
 import { AddAccount } from '@domain/use-cases';
-import { serveError, ok } from '@presentation/helper/http/http-helper';
+import { serveError, ok, badRequest } from '@presentation/helper/http/http-helper';
 import { Controller, HttpRequest, HttpResponse } from '@presentation/protocols';
 import { Validation } from '@presentation/protocols/validation';
 
@@ -12,7 +12,10 @@ export class SignUpControler implements Controller {
   }
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      this.validation.validate(httpRequest.body);
+      const validateError = this.validation.validate(httpRequest.body);
+      if (validateError) {
+        return badRequest(validateError);
+      }
       const httpResponse = await this.addAccount.add(httpRequest.body);
       return ok(httpResponse);
     } catch (error) {
