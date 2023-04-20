@@ -51,4 +51,11 @@ describe('SignUpControler', () => {
     await sut.handle(addAccountBody);
     expect(validSpy).toHaveBeenCalledWith(makeFakeAddAccountData());
   });
+
+  it('Should return 400 if Validation returns an error', async () => {
+    const { sut, validation } = makeSut();
+    jest.spyOn(validation, 'validate').mockReturnValueOnce(new MissingParamError('field_name'));
+    const httpResponse = await sut.handle(addAccountBody);
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('field_name')));
+  });
 });
