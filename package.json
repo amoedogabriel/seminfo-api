@@ -9,6 +9,7 @@
     "build": "tsc --p tsconfig.prod.json",
     "test": "jest --passWithNoTests --runInBand",
     "test:watch": "npm test -- --watch",
+    "test:coverage": "npm test -- --coverage",
     "prepare": "husky install"
   },
   "_moduleAliases": {
