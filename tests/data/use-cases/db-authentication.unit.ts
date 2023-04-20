@@ -78,6 +78,13 @@ describe('DbAuthentication', () => {
     expect(promise).rejects.toThrow();
   });
 
+  it('Should return access token if UpdateAccessToken succeeds', async () => {
+    const { sut, updateAccessToken } = makeSut();
+    jest.spyOn(updateAccessToken, 'updateAccessToken');
+    const accessToken = await sut.auth(makeFakeAuthenticationData());
+    expect(accessToken).toBeTruthy();
+  });
+
   it('Should call HashCompare with correct values', async () => {
     const { sut, hashCompare } = makeSut();
     const hashCompareSpy = jest.spyOn(hashCompare, 'compare');
