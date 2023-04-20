@@ -18,6 +18,7 @@
       "@infra/*": ["src/infra/*"],
       "@main/*": ["src/main/*"],
       "@presentation/*": ["src/presentation/*"],
+      "@validation/*": ["src/validation/*"],
       "@tests/*": ["tests/*"]
     }
   },

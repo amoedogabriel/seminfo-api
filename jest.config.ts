@@ -95,6 +95,7 @@ export default {
     '@infra/(.*)': '<rootDir>/src/infra/$1',
     '@main/(.*)': '<rootDir>/src/main/$1',
     '@presentation/(.*)': '<rootDir>/src/presentation/$1',
+    '@validation/(.*)': '<rootDir>/src/validation/$1',
     '@tests/(.*)': '<rootDir>/tests/$1',
   },
 
