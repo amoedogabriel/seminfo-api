@@ -1,7 +1,7 @@
-import { LoadAccountByEmailRepository } from '@data/protocols/db';
+import { LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '@data/protocols/db';
 import { DbAuthentication } from '@data/use-cases';
 import { makeFakeAddAccountResult, makeFakeAuthenticationData } from '@tests/helper';
-import { EncrypterStub } from '@tests/data/test';
+import { EncrypterStub, UpdateAccessTokenRepositoryStub } from '@tests/data/test';
 import { Encrypter } from '@data/protocols/cryptography';
 import { AccountModel } from '@domain/models';
 
@@ -15,13 +15,15 @@ type SutTypes = {
   sut: DbAuthentication;
   loadAccountByEmail: LoadAccountByEmailRepository;
   encrypter: Encrypter;
+  updateAccessToken: UpdateAccessTokenRepository;
 };
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmail = new LoadAccountByEmailRepositoryStub();
   const encrypter = new EncrypterStub();
-  const sut = new DbAuthentication(loadAccountByEmail, encrypter);
-  return { sut, loadAccountByEmail, encrypter };
+  const updateAccessToken = new UpdateAccessTokenRepositoryStub();
+  const sut = new DbAuthentication(loadAccountByEmail, encrypter, updateAccessToken);
+  return { sut, loadAccountByEmail, encrypter, updateAccessToken };
 };
 
 describe('DbAuthentication', () => {
@@ -37,5 +39,12 @@ describe('DbAuthentication', () => {
     const encryptSpy = jest.spyOn(encrypter, 'encrypt');
     await sut.auth(makeFakeAuthenticationData());
     expect(encryptSpy).toHaveBeenCalledWith('any_id');
+  });
+
+  it('Should call UpdateAccessToken with correct value', async () => {
+    const { sut, updateAccessToken } = makeSut();
+    const updateTokenSpy = jest.spyOn(updateAccessToken, 'updateAccessToken');
+    await sut.auth(makeFakeAuthenticationData());
+    expect(updateTokenSpy).toHaveBeenCalledWith(makeFakeAuthenticationData().email, 'any_token');
   });
 });
