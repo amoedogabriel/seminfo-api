@@ -21,3 +21,10 @@ export const badRequest = (data: any): HttpResponse => {
     body: data,
   };
 };
+
+export const forbidden = (data: any): HttpResponse => {
+  return {
+    statusCode: 403,
+    body: data,
+  };
+};

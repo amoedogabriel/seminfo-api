@@ -1,5 +1,6 @@
 import { AddAccount } from '@domain/use-cases';
-import { serveError, ok, badRequest } from '@presentation/helper/http/http-helper';
+import { EmailInUseError } from '@presentation/errors/email-in-use-error';
+import { serveError, ok, badRequest, forbidden } from '@presentation/helper/http/http-helper';
 import { Controller, HttpRequest, HttpResponse } from '@presentation/protocols';
 import { Validation } from '@presentation/protocols/validation';
 
@@ -17,8 +18,11 @@ export class SignUpControler implements Controller {
         return badRequest(validateError);
       }
       const { name, email, password } = httpRequest.body;
-      const httpResponse = await this.addAccount.add({ name, email, password });
-      return ok(httpResponse);
+      const account = await this.addAccount.add({ name, email, password });
+      if (!account) {
+        return forbidden(new EmailInUseError());
+      }
+      return ok(account);
     } catch (error) {
       return serveError(error);
     }
