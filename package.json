@@ -5,20 +5,12 @@
   "main": "index.ts",
   "scripts": {
     "start": "node dist/main/server.js",
-    "dev": "ts-node src/main/server.ts",
+    "dev": "NODE_ENV=development ts-node src/main/server.ts",
     "build": "tsc --p tsconfig.prod.json",
     "test": "jest --passWithNoTests --runInBand",
     "test:watch": "npm test -- --watch",
     "test:coverage": "npm test -- --coverage",
     "prepare": "husky install"
-  },
-  "_moduleAliases": {
-    "@data": "dist/data",
-    "@domain": "dist/domain",
-    "@infra": "dist/infra",
-    "@main": "dist/main",
-    "@presentation": "dist/presentation",
-    "@validation": "dist/validation"
   },
   "author": "Breno Gonzaga",
   "license": "ISC",
