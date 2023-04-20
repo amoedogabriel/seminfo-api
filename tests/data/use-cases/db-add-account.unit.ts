@@ -2,7 +2,7 @@ import { Hasher } from '@data/protocols/cryptography';
 import { AddAccountRepository, LoadAccountByEmailRepository } from '@data/protocols/db';
 import { DbAddAccount } from '@data/use-cases';
 import { makeFakeAddAccountData, makeFakeAddAccountResult } from '@tests/helper';
-import { HasherStub, AddAccountRepositoryStub, LoadAccountByEmailRepositoryStub } from '../test';
+import { HasherStub, AddAccountRepositoryStub, LoadAccountByEmailRepositoryStub } from '@tests/data/test';
 
 type SutTypes = {
   sut: DbAddAccount;
@@ -25,7 +25,7 @@ const makeSut = (): SutTypes => {
 };
 
 describe('DbAddAccount', () => {
-  it('Should AddAccountRepository with correct values', async () => {
+  it('Should call AddAccountRepository with correct values', async () => {
     const { sut, addAccountRepository } = makeSut();
     const addAccountSpy = jest.spyOn(addAccountRepository, 'addAccount');
     await sut.add(makeFakeAddAccountData());
@@ -34,6 +34,20 @@ describe('DbAddAccount', () => {
       email: 'any_email@mail.com',
       password: 'hashed_password',
     });
+  });
+
+  it('Should return an account on success ', async () => {
+    const { sut, addAccountRepository } = makeSut();
+    jest
+      .spyOn(addAccountRepository, 'addAccount')
+      .mockReturnValueOnce(Promise.resolve(makeFakeAddAccountResult()));
+    const accountData = makeFakeAddAccountData();
+    const accountResult = await sut.add(accountData);
+    expect(accountResult).toBeTruthy();
+    expect(accountResult.id).toBeTruthy();
+    expect(accountResult.name).toBe(accountData.name);
+    expect(accountResult.email).toBe(accountData.email);
+    expect(accountResult.password).toBe(accountData.password);
   });
 
   it('Should throw if AddAccountRepository throws', async () => {
@@ -55,20 +69,6 @@ describe('DbAddAccount', () => {
     jest.spyOn(hasher, 'hash').mockReturnValueOnce(Promise.reject(new Error()));
     const promise = sut.add(makeFakeAddAccountData());
     expect(promise).rejects.toThrow();
-  });
-
-  it('Should return an account on success ', async () => {
-    const { sut, addAccountRepository } = makeSut();
-    jest
-      .spyOn(addAccountRepository, 'addAccount')
-      .mockReturnValueOnce(Promise.resolve(makeFakeAddAccountResult()));
-    const accountData = makeFakeAddAccountData();
-    const accountResult = await sut.add(accountData);
-    expect(accountResult).toBeTruthy();
-    expect(accountResult.id).toBeTruthy();
-    expect(accountResult.name).toBe(accountData.name);
-    expect(accountResult.email).toBe(accountData.email);
-    expect(accountResult.password).toBe(accountData.password);
   });
 
   it('Should call LoadAccountByEmail with correct e-mail', async () => {
