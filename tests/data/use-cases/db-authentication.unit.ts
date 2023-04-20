@@ -41,6 +41,13 @@ describe('DbAuthentication', () => {
     expect(promise).rejects.toThrow();
   });
 
+  it('Should call return null if LoadAccountByEmail returns null', async () => {
+    const { sut, loadAccountByEmail } = makeSut();
+    jest.spyOn(loadAccountByEmail, 'loadByEmail').mockReturnValueOnce(null);
+    const result = await sut.auth(makeFakeAuthenticationData());
+    expect(result).toBeNull();
+  });
+
   it('Should call Encrypter with correct value', async () => {
     const { sut, encrypter } = makeSut();
     const encryptSpy = jest.spyOn(encrypter, 'encrypt');
