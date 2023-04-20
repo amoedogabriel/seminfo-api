@@ -1,7 +1,7 @@
 import { MongoHelper } from '@infra/helper';
-import { makeFakeAddAccountData } from '@tests/helper/make-fake-add-account-data';
 import app from '@main/config/app';
 import env from '@main/config/env';
+import { makeFakeAccountRequest } from '@tests/helper/make-fake-account-request';
 import { Collection } from 'mongodb';
 import request from 'supertest';
 
@@ -20,7 +20,7 @@ describe('SignUp Routes', () => {
     accountCollection.deleteMany({});
   });
   it('Should return an account on success', async () => {
-    const account = makeFakeAddAccountData();
+    const account = makeFakeAccountRequest().body;
     await request(app).post('/signup').send(account).expect(200);
   });
 });
