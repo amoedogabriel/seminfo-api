@@ -14,8 +14,9 @@ export class DbSendEmailConfirmation implements SendEmailConfirmation {
     this.sendEmailConfirmationRepository = sendEmailConfirmationRepository;
   }
   async send(emailData: SendEmailConfirmationModel): Promise<void> {
-    await this.loadAccountByEmailRepository.loadByEmail(emailData.email);
-    await this.sendEmailConfirmationRepository.sendEmail(emailData);
-    return null;
+    const account = await this.loadAccountByEmailRepository.loadByEmail(emailData.email);
+    if (account) {
+      await this.sendEmailConfirmationRepository.sendEmail(emailData);
+    }
   }
 }
