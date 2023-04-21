@@ -4,7 +4,7 @@ import { AuthenticationStub, ValidationStub } from '../test';
 import { makeFakeAuthenticationRequest } from '@tests/helper';
 import { Authentication } from '@domain/use-cases';
 import { MissingParamError } from '@presentation/errors';
-import { badRequest } from '@presentation/helper/http/http-helper';
+import { badRequest, serverError } from '@presentation/helper/http/http-helper';
 
 type SutTypes = {
   sut: LoginController;
@@ -39,5 +39,12 @@ describe('LoginController', () => {
     const authenticationSpy = jest.spyOn(authentication, 'auth');
     await sut.handle(makeFakeAuthenticationRequest());
     expect(authenticationSpy).toHaveBeenCalledWith(makeFakeAuthenticationRequest().body);
+  });
+
+  it('Should return 500 if Authentication throws', async () => {
+    const { sut, authentication } = makeSut();
+    jest.spyOn(authentication, 'auth').mockReturnValueOnce(Promise.reject(serverError(new Error())));
+    const httpResponse = await sut.handle(makeFakeAuthenticationRequest());
+    expect(httpResponse).toEqual(serverError(new Error()));
   });
 });
