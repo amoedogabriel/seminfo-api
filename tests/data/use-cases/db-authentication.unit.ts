@@ -3,7 +3,7 @@ import { DbAuthentication } from '@data/use-cases';
 import { makeFakeAddAccountResult, makeFakeAuthenticationData } from '@tests/helper';
 import { EncrypterStub, HashCompareStub, UpdateAccessTokenRepositoryStub } from '@tests/data/test';
 import { Encrypter, HashCompare } from '@data/protocols/cryptography';
-import { AccountModel } from '@domain/models';
+import { AccountModel } from '@domain/models/account';
 
 class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
   async loadByEmail(_email: string): Promise<AccountModel> {

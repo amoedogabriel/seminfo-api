@@ -1,5 +1,5 @@
-import { AddAccountModel, AccountModel } from '@domain/models';
-import { AddAccount } from '@domain/use-cases';
+import { AddAccountModel, AccountModel } from '@domain/models/account';
+import { AddAccount } from '@domain/use-cases/account';
 import { makeFakeAddAccountResult } from '@tests/helper';
 
 export class AddAccountStub implements AddAccount {

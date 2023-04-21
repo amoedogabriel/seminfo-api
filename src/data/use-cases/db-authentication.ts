@@ -1,8 +1,8 @@
 import { Encrypter } from '@data/protocols/cryptography';
 import { HashCompare } from '@data/protocols/cryptography/hash-compare';
 import { LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '@data/protocols/db';
-import { AuthenticationModel } from '@domain/models';
-import { Authentication } from '@domain/use-cases';
+import { AuthenticationModel } from '@domain/models/account';
+import { Authentication } from '@domain/use-cases/account';
 
 export class DbAuthentication implements Authentication {
   private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository;

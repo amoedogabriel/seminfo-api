@@ -2,7 +2,7 @@ import { LoginController } from '@presentation/controllers/login-controller';
 import { Validation } from '@presentation/protocols';
 import { AuthenticationStub, ValidationStub } from '../test';
 import { makeFakeAuthenticationRequest } from '@tests/helper';
-import { Authentication } from '@domain/use-cases';
+import { Authentication } from '@domain/use-cases/account';
 import { MissingParamError } from '@presentation/errors';
 import { badRequest, serverError, ok, unauthorized } from '@presentation/helper/http/http-helper';
 

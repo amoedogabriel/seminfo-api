@@ -1,7 +1,7 @@
 import { Hasher } from '@data/protocols/cryptography';
 import { AddAccountRepository, LoadAccountByEmailRepository } from '@data/protocols/db';
-import { AddAccountModel, AccountModel } from '@domain/models';
-import { AddAccount } from '@domain/use-cases';
+import { AddAccountModel, AccountModel } from '@domain/models/account';
+import { AddAccount } from '@domain/use-cases/account';
 
 export class DbAddAccount implements AddAccount {
   private readonly hasher: Hasher;
