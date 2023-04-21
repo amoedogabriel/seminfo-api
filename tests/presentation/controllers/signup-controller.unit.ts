@@ -1,22 +1,24 @@
-import { AddAccount } from '@domain/use-cases';
+import { AddAccount, Authentication } from '@domain/use-cases';
 import { SignUpControler } from '@presentation/controllers/signup-controller';
 import { MissingParamError, EmailInUseError } from '@presentation/errors';
 import { serveError, badRequest, forbidden, ok } from '@presentation/helper/http/http-helper';
 import { Validation } from '@presentation/protocols';
 import { makeFakeAccountRequest } from '@tests/helper';
-import { AddAccountStub, ValidationStub } from '@tests/presentation/test';
+import { AddAccountStub, AuthenticationStub, ValidationStub } from '@tests/presentation/test';
 
 type SutTypes = {
   sut: SignUpControler;
   addAccount: AddAccount;
   validation: Validation;
+  authentication: Authentication;
 };
 
 const makeSut = (): SutTypes => {
   const addAccount = new AddAccountStub();
   const validation = new ValidationStub();
-  const sut = new SignUpControler(addAccount, validation);
-  return { sut, addAccount, validation };
+  const authentication = new AuthenticationStub();
+  const sut = new SignUpControler(addAccount, validation, authentication);
+  return { sut, addAccount, validation, authentication };
 };
 
 describe('SignUpControler', () => {
@@ -64,5 +66,12 @@ describe('SignUpControler', () => {
     jest.spyOn(addAccount, 'add').mockReturnValueOnce(null);
     const account = await sut.handle(makeFakeAccountRequest());
     expect(account).toEqual(forbidden(new EmailInUseError()));
+  });
+
+  it('Should call Authentication with correct values', async () => {
+    const { sut, authentication } = makeSut();
+    const addSpy = jest.spyOn(authentication, 'auth');
+    await sut.handle(makeFakeAccountRequest());
+    expect(addSpy).toHaveBeenCalledWith({ email: 'any_email@mail.com', password: 'any_password' });
   });
 });
