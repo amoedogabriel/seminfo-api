@@ -13,7 +13,7 @@ export const makeLoginValidationFactory = () => {
   for (const field of requiredFields) {
     validations.push(new RequiredFieldValidation(field));
   }
-  validations.push(new EmailValidation('email', new StrongPasswordValidatorAdapter()));
-  validations.push(new PasswordValidation('password', new EmailValidatorAdapter()));
+  validations.push(new EmailValidation('email', new EmailValidatorAdapter()));
+  validations.push(new PasswordValidation('password', new StrongPasswordValidatorAdapter()));
   return new ValidationComposite(validations);
 };
