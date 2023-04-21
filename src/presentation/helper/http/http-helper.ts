@@ -1,4 +1,5 @@
 import { ServerError } from '@presentation/errors';
+import { UnauthorizedError } from '@presentation/errors/unauthorized-error';
 import { HttpResponse } from '@presentation/protocols';
 
 export const serverError = (error: Error): HttpResponse => {
@@ -26,5 +27,12 @@ export const forbidden = (data: any): HttpResponse => {
   return {
     statusCode: 403,
     body: data,
+  };
+};
+
+export const unauthorized = (): HttpResponse => {
+  return {
+    statusCode: 401,
+    body: new UnauthorizedError(),
   };
 };
