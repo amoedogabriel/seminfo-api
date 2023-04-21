@@ -1,4 +1,5 @@
 import { Authentication } from '@domain/use-cases';
+import { badRequest } from '@presentation/helper/http/http-helper';
 import { Controller, HttpRequest, HttpResponse, Validation } from '@presentation/protocols';
 
 export class LoginController implements Controller {
@@ -9,7 +10,10 @@ export class LoginController implements Controller {
     this.authentication = authentication;
   }
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-    this.validation.validate(httpRequest.body);
+    const validateError = this.validation.validate(httpRequest.body);
+    if (validateError) {
+      return badRequest(validateError);
+    }
     const { email, password } = httpRequest.body;
     await this.authentication.auth({ email, password });
     return null;
