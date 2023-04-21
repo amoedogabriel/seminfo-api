@@ -47,4 +47,18 @@ describe('AccountMongoRepository', () => {
     const account = await sut.loadByEmail('valid_email@mail.com');
     expect(account).toBeNull();
   });
+
+  it('Should updateAccessToken on updateAccessToken', async () => {
+    const sut = new AccountMongoRepository();
+    const accountId = await accountCollection
+      .insertOne(makeFakeAddAccountData())
+      .then((data) => data.insertedId);
+    const findAccount = await accountCollection.findOne(accountId);
+    expect(findAccount?.accessToken).toBeFalsy();
+    await sut.updateAccessToken(findAccount.email, 'any_token');
+    const accountWithToken = await accountCollection.findOne(accountId);
+    console.log(accountWithToken);
+    expect(accountWithToken).toBeTruthy();
+    expect(accountWithToken.accessToken).toBeTruthy();
+  });
 });
