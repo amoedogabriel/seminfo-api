@@ -1,6 +1,6 @@
 import { Hasher } from '@data/protocols/cryptography';
-import { AddAccountRepository, LoadAccountByEmailRepository } from '@data/protocols/db';
-import { DbAddAccount } from '@data/use-cases';
+import { AddAccountRepository, LoadAccountByEmailRepository } from '@data/protocols/db/account';
+import { DbAddAccount } from '@data/use-cases/account';
 import { makeFakeAddAccountData, makeFakeAddAccountResult } from '@tests/helper';
 import { HasherStub, AddAccountRepositoryStub, LoadAccountByEmailRepositoryStub } from '@tests/data/test';
 

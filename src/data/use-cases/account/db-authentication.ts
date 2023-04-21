@@ -1,6 +1,6 @@
 import { Encrypter } from '@data/protocols/cryptography';
 import { HashCompare } from '@data/protocols/cryptography/hash-compare';
-import { LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '@data/protocols/db';
+import { LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '@data/protocols/db/account';
 import { AuthenticationModel } from '@domain/models/account';
 import { Authentication } from '@domain/use-cases/account';
 

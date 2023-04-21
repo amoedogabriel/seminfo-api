@@ -1,4 +1,4 @@
-import { DbAddAccount, DbAuthentication } from '@data/use-cases';
+import { DbAddAccount, DbAuthentication } from '@data/use-cases/account';
 import { AccountMongoRepository } from '@infra/db';
 import { SignUpControler } from '@presentation/controllers/signup-controller';
 import { makeSignupValidation } from '@main/factories/signup';

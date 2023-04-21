@@ -1,5 +1,5 @@
-import { LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '@data/protocols/db';
-import { DbAuthentication } from '@data/use-cases';
+import { LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '@data/protocols/db/account';
+import { DbAuthentication } from '@data/use-cases/account';
 import { makeFakeAddAccountResult, makeFakeAuthenticationData } from '@tests/helper';
 import { EncrypterStub, HashCompareStub, UpdateAccessTokenRepositoryStub } from '@tests/data/test';
 import { Encrypter, HashCompare } from '@data/protocols/cryptography';
