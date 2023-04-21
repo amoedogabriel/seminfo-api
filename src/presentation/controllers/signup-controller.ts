@@ -1,4 +1,4 @@
-import { AddAccount } from '@domain/use-cases';
+import { AddAccount, Authentication } from '@domain/use-cases';
 import { EmailInUseError } from '@presentation/errors';
 import { badRequest, forbidden, serveError, ok } from '@presentation/helper/http/http-helper';
 import { Controller, Validation, HttpRequest, HttpResponse } from '@presentation/protocols';
@@ -6,9 +6,11 @@ import { Controller, Validation, HttpRequest, HttpResponse } from '@presentation
 export class SignUpControler implements Controller {
   private readonly addAccount: AddAccount;
   private readonly validation: Validation;
-  constructor(addAccount: AddAccount, validation: Validation) {
+  private readonly authentication: Authentication;
+  constructor(addAccount: AddAccount, validation: Validation, authentication: Authentication) {
     this.addAccount = addAccount;
     this.validation = validation;
+    this.authentication = authentication;
   }
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -21,6 +23,7 @@ export class SignUpControler implements Controller {
       if (!account) {
         return forbidden(new EmailInUseError());
       }
+      await this.authentication.auth({ email: account.email, password: account.password });
       return ok(account);
     } catch (error) {
       return serveError(error);
