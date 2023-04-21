@@ -1,6 +1,6 @@
 import { AddAccount, Authentication } from '@domain/use-cases';
 import { EmailInUseError } from '@presentation/errors';
-import { badRequest, forbidden, serveError, ok } from '@presentation/helper/http/http-helper';
+import { badRequest, forbidden, serverError, ok } from '@presentation/helper/http/http-helper';
 import { Controller, Validation, HttpRequest, HttpResponse } from '@presentation/protocols';
 
 export class SignUpControler implements Controller {
@@ -26,7 +26,7 @@ export class SignUpControler implements Controller {
       await this.authentication.auth({ email: account.email, password: account.password });
       return ok(account);
     } catch (error) {
-      return serveError(error);
+      return serverError(error);
     }
   }
 }

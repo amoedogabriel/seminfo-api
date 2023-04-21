@@ -1,10 +1,10 @@
-import { ServeError } from '@presentation/errors';
+import { ServerError } from '@presentation/errors';
 import { HttpResponse } from '@presentation/protocols';
 
-export const serveError = (error: Error): HttpResponse => {
+export const serverError = (error: Error): HttpResponse => {
   return {
     statusCode: 500,
-    body: new ServeError(error.stack),
+    body: new ServerError(error.stack),
   };
 };
 

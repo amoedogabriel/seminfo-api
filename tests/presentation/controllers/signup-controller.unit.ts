@@ -1,7 +1,7 @@
 import { AddAccount, Authentication } from '@domain/use-cases';
 import { SignUpControler } from '@presentation/controllers/signup-controller';
 import { MissingParamError, EmailInUseError } from '@presentation/errors';
-import { serveError, badRequest, forbidden, ok } from '@presentation/helper/http/http-helper';
+import { serverError, badRequest, forbidden, ok } from '@presentation/helper/http/http-helper';
 import { Validation } from '@presentation/protocols';
 import { makeFakeAccountRequest } from '@tests/helper';
 import { AddAccountStub, AuthenticationStub, ValidationStub } from '@tests/presentation/test';
@@ -37,7 +37,7 @@ describe('SignUpControler', () => {
     const { sut, addAccount } = makeSut();
     jest.spyOn(addAccount, 'add').mockRejectedValueOnce(new Error());
     const httpResponse = await sut.handle(makeFakeAccountRequest());
-    expect(httpResponse).toEqual(serveError(httpResponse.body.stack));
+    expect(httpResponse).toEqual(serverError(httpResponse.body.stack));
   });
 
   it('Should return 200 if AddAccount succeeds', async () => {
