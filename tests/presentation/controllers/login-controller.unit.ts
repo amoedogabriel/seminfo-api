@@ -4,7 +4,7 @@ import { AuthenticationStub, ValidationStub } from '../test';
 import { makeFakeAuthenticationRequest } from '@tests/helper';
 import { Authentication } from '@domain/use-cases';
 import { MissingParamError } from '@presentation/errors';
-import { badRequest, serverError } from '@presentation/helper/http/http-helper';
+import { badRequest, serverError, ok, unauthorized } from '@presentation/helper/http/http-helper';
 
 type SutTypes = {
   sut: LoginController;
@@ -46,5 +46,18 @@ describe('LoginController', () => {
     jest.spyOn(authentication, 'auth').mockReturnValueOnce(Promise.reject(serverError(new Error())));
     const httpResponse = await sut.handle(makeFakeAuthenticationRequest());
     expect(httpResponse).toEqual(serverError(new Error()));
+  });
+
+  it('Should return 401 if Authentication returns null', async () => {
+    const { sut, authentication } = makeSut();
+    jest.spyOn(authentication, 'auth').mockReturnValueOnce(null);
+    const httpResponse = await sut.handle(makeFakeAuthenticationRequest());
+    expect(httpResponse).toEqual(unauthorized());
+  });
+
+  it('Should return 200 if Authentication succeeds', async () => {
+    const { sut } = makeSut();
+    const httpResponse = await sut.handle(makeFakeAuthenticationRequest());
+    expect(httpResponse).toEqual(ok('any_token'));
   });
 });
