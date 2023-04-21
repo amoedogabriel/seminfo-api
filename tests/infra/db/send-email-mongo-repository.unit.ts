@@ -1,4 +1,4 @@
-import { SendEmailMongoRepository } from '@infra/db/send-email-mongo-repository';
+import { EmailMongoRepository } from '@infra/db/email-mongo-repository';
 import { MongoHelper } from '@infra/helper';
 import { makeFakeAddAccountData } from '@tests/helper';
 import { Collection } from 'mongodb';
@@ -20,7 +20,7 @@ describe('SendEmailMongoRepository', () => {
   });
 
   it('Should return a valid confirmation token on setToken', async () => {
-    const sut = new SendEmailMongoRepository();
+    const sut = new EmailMongoRepository();
     const accountData = makeFakeAddAccountData();
     const accountId = await accountCollection.insertOne(accountData).then((data) => data.insertedId);
     const token = await sut.setToken('any_email@mail.com');
