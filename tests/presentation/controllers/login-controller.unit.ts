@@ -3,6 +3,8 @@ import { Validation } from '@presentation/protocols';
 import { AuthenticationStub, ValidationStub } from '../test';
 import { makeFakeAuthenticationRequest } from '@tests/helper';
 import { Authentication } from '@domain/use-cases';
+import { MissingParamError } from '@presentation/errors';
+import { badRequest } from '@presentation/helper/http/http-helper';
 
 type SutTypes = {
   sut: LoginController;
@@ -23,6 +25,13 @@ describe('LoginController', () => {
     const validationSpy = jest.spyOn(validation, 'validate');
     await sut.handle(makeFakeAuthenticationRequest());
     expect(validationSpy).toHaveBeenCalledWith(makeFakeAuthenticationRequest().body);
+  });
+
+  it('Should return 400 if Validation returns an error', async () => {
+    const { sut, validation } = makeSut();
+    jest.spyOn(validation, 'validate').mockReturnValueOnce(new MissingParamError('field_name'));
+    const httpResponse = await sut.handle(makeFakeAuthenticationRequest());
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('field_name')));
   });
 
   it('Should call Authentication with correct values', async () => {
