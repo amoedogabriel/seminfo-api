@@ -43,7 +43,7 @@ describe('SignUpControler', () => {
   it('Should return 200 if AddAccount succeeds', async () => {
     const { sut } = makeSut();
     const httpResponse = await sut.handle(makeFakeAccountRequest());
-    expect(httpResponse).toEqual(ok(httpResponse.body));
+    expect(httpResponse).toEqual(ok('any_token'));
   });
 
   it('Should call Validation with correct values', async () => {
@@ -73,5 +73,12 @@ describe('SignUpControler', () => {
     const addSpy = jest.spyOn(authentication, 'auth');
     await sut.handle(makeFakeAccountRequest());
     expect(addSpy).toHaveBeenCalledWith({ email: 'any_email@mail.com', password: 'any_password' });
+  });
+
+  it('Should return 500 if Authentication throws', async () => {
+    const { sut, authentication } = makeSut();
+    jest.spyOn(authentication, 'auth').mockReturnValueOnce(Promise.reject(serverError(new Error())));
+    const httpResponse = await sut.handle(makeFakeAccountRequest());
+    expect(httpResponse).toEqual(serverError(new Error()));
   });
 });
