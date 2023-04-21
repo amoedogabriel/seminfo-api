@@ -57,7 +57,6 @@ describe('AccountMongoRepository', () => {
     expect(findAccount?.accessToken).toBeFalsy();
     await sut.updateAccessToken(findAccount.email, 'any_token');
     const accountWithToken = await accountCollection.findOne(accountId);
-    console.log(accountWithToken);
     expect(accountWithToken).toBeTruthy();
     expect(accountWithToken.accessToken).toBeTruthy();
   });
