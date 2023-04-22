@@ -1,6 +1,6 @@
 import { MongoHelper } from '@infra/helper';
 import app from '@main/config/app';
-import env from '@main/config/env';
+import mongoEnv from '@main/config/mongo-env';
 import { hash } from 'bcrypt';
 import { Collection } from 'mongodb';
 import request from 'supertest';
@@ -9,7 +9,7 @@ let accountCollection: Collection;
 
 describe('Login Route', () => {
   beforeAll(async () => {
-    await MongoHelper.connect(env.mongoURL);
+    await MongoHelper.connect(mongoEnv.mongoURL);
   });
 
   afterAll(async () => {

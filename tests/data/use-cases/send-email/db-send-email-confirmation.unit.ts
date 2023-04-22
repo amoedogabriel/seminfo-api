@@ -1,7 +1,7 @@
 import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
 import { SendEmailConfirmationRepository } from '@data/protocols/db/account/send-email-confirmation-repository';
 import { SetEmailConfirmationTokenRepository } from '@data/protocols/db/send-email';
-import { DbSendEmailConfirmation } from '@data/use-cases/account/db-send-email-confirmation';
+import { DbSendEmailConfirmation } from '@data/use-cases/mail';
 import { AccountModel } from '@domain/models/account';
 import {
   SendEmailConfirmationStub,
