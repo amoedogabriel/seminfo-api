@@ -3,11 +3,19 @@ import { ConfirmEmailTokenRepository } from '@data/protocols/db/mail';
 import { DbConfirmEmailToken } from '@data/use-cases/mail';
 import { AccountModel } from '@domain/models/account';
 import { ConfirmEmailTokenRepositoryStub } from '@tests/data/test/mail';
-import { makeFakeAddAccountResult } from '@tests/helper/account';
 
 class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
   async loadByEmail(_email: string): Promise<AccountModel> {
-    return makeFakeAddAccountResult();
+    const now = new Date();
+    const expirationToken = now.setHours(now.getHours()) + 1;
+    return {
+      id: 'any_id',
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password',
+      confirmationToken: 'any_password',
+      expirationToken,
+    };
   }
 }
 
@@ -41,7 +49,26 @@ describe('DbConfirmEmailToken', () => {
 
   it('Should not call ConfirmEmailTokenRepository if account is null', async () => {
     const { sut, loadAccountByEmail, confirmEmailToken } = makeSut();
-    jest.spyOn(loadAccountByEmail, 'loadByEmail').mockReturnValueOnce(null);
+    jest.spyOn(loadAccountByEmail, 'loadByEmail').mockReturnValueOnce(Promise.resolve(null));
+    const confirmEmailSpy = jest.spyOn(confirmEmailToken, 'confirmEmail');
+    await sut.confirm('valid_email@mail.com', 'confirmation_token');
+    expect(confirmEmailSpy).not.toHaveBeenCalled();
+  });
+
+  it('Should not call ConfirmEmailTokenRepository if token is expired', async () => {
+    const { sut, loadAccountByEmail, confirmEmailToken } = makeSut();
+    const now = new Date();
+    const expirationToken = now.setHours(now.getHours()) - 1;
+    jest.spyOn(loadAccountByEmail, 'loadByEmail').mockReturnValueOnce(
+      Promise.resolve({
+        id: 'any_id',
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        confirmationToken: 'any_password',
+        expirationToken,
+      })
+    );
     const confirmEmailSpy = jest.spyOn(confirmEmailToken, 'confirmEmail');
     await sut.confirm('valid_email@mail.com', 'confirmation_token');
     expect(confirmEmailSpy).not.toHaveBeenCalled();
