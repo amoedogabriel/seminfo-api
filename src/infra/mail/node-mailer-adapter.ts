@@ -1,14 +1,14 @@
 import { SendEmailConfirmation } from '@data/protocols/mail';
 import nodemailer from 'nodemailer';
 import env from '@main/config/mail-env';
-const { host, port, user, pass, from } = env;
+const { host, port, secure, user, pass, from } = env;
 
 export class NodeMailerAdapter implements SendEmailConfirmation {
   async sendEmail(email: string, token: string): Promise<void> {
     const transporter = nodemailer.createTransport({
       host: host,
       port: +port,
-      secure: true,
+      secure: !!secure,
       auth: {
         user: user,
         pass: pass,
