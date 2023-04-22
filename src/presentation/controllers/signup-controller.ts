@@ -1,16 +1,17 @@
-import { AddAccount, Authentication } from '@domain/use-cases/account';
+import { AddAccount } from '@domain/use-cases/account';
+import { SendEmailConfirmation } from '@domain/use-cases/send-email';
 import { EmailInUseError } from '@presentation/errors';
-import { badRequest, forbidden, serverError, ok } from '@presentation/helper/http/http-helper';
+import { badRequest, forbidden, noContent, serverError } from '@presentation/helper/http/http-helper';
 import { Controller, Validation, HttpRequest, HttpResponse } from '@presentation/protocols';
 
 export class SignUpControler implements Controller {
   private readonly addAccount: AddAccount;
   private readonly validation: Validation;
-  private readonly authentication: Authentication;
-  constructor(addAccount: AddAccount, validation: Validation, authentication: Authentication) {
+  private readonly sendEmailConfirmation: SendEmailConfirmation;
+  constructor(addAccount: AddAccount, validation: Validation, sendEmailConfirmation: SendEmailConfirmation) {
     this.addAccount = addAccount;
     this.validation = validation;
-    this.authentication = authentication;
+    this.sendEmailConfirmation = sendEmailConfirmation;
   }
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -23,11 +24,8 @@ export class SignUpControler implements Controller {
       if (!account) {
         return forbidden(new EmailInUseError());
       }
-      const accessToken = await this.authentication.auth({
-        email,
-        password,
-      });
-      return ok(accessToken);
+      await this.sendEmailConfirmation.send(email);
+      return noContent();
     } catch (error) {
       return serverError(error);
     }
