@@ -1,4 +1,5 @@
 import { SendEmailConfirmation } from '@domain/use-cases/send-email';
+import { noContent } from '@presentation/helper/http/http-helper';
 import { Controller, HttpRequest, HttpResponse } from '@presentation/protocols';
 
 export class EmailConfirmationController implements Controller {
@@ -9,6 +10,6 @@ export class EmailConfirmationController implements Controller {
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { email } = httpRequest.body;
     await this.sendEmailConfirmation.send(email);
-    return null;
+    return noContent();
   }
 }
