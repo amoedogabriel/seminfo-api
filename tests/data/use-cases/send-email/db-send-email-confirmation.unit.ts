@@ -4,7 +4,7 @@ import { SetEmailConfirmationTokenRepository } from '@data/protocols/db/send-ema
 import { DbSendEmailConfirmation } from '@data/use-cases/mail';
 import { AccountModel } from '@domain/models/account';
 import {
-  SendEmailConfirmationStub,
+  SendEmailConfirmationRepositoryStub,
   SetEmailConfirmationTokenRepositoryStub,
 } from '@tests/data/test/send-email';
 import { makeFakeAddAccountResult } from '@tests/helper';
@@ -25,7 +25,7 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const loadAccountByEmail = new LoadAccountByEmailRepositoryStub();
   const setEmailConfirmationToken = new SetEmailConfirmationTokenRepositoryStub();
-  const sendEmailConfirmation = new SendEmailConfirmationStub();
+  const sendEmailConfirmation = new SendEmailConfirmationRepositoryStub();
   const sut = new DbSendEmailConfirmation(
     loadAccountByEmail,
     setEmailConfirmationToken,
