@@ -26,5 +26,6 @@ describe('SendEmailMongoRepository', () => {
     const token = await sut.setToken('any_email@mail.com');
     const account = await accountCollection.findOne(accountId);
     expect(account.confirmationToken).toEqual(token);
+    expect(account.expirationToken).toBeTruthy();
   });
 });
