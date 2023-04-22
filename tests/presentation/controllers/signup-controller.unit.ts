@@ -76,4 +76,11 @@ describe('SignUpControler', () => {
     const httpResponse = await sut.handle(makeFakeAccountRequest());
     expect(httpResponse).toEqual(noContent());
   });
+
+  it('Should return 500 if SendEmailConfirmation throws', async () => {
+    const { sut, sendEmailConfirmation } = makeSut();
+    jest.spyOn(sendEmailConfirmation, 'send').mockReturnValueOnce(Promise.reject(serverError(new Error())));
+    const httpResponse = await sut.handle({ body: { email: 'valid_email@mail.com' } });
+    expect(httpResponse).toEqual(serverError(new Error()));
+  });
 });
