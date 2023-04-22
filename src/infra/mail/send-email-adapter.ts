@@ -1,14 +1,17 @@
 import { SendEmailConfirmationRepository } from '@data/protocols/db/account';
 import nodemailer from 'nodemailer';
+import env from '@main/config/mail-env';
+
+const { host, port, user, pass } = env;
 
 export class SendEmailConfirmationAdapter implements SendEmailConfirmationRepository {
   async sendEmail(email: string, token: string): Promise<void> {
     const transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
+      host: host,
+      port: +port,
       auth: {
-        user: 'claudie.mills@ethereal.email',
-        pass: 'eN2WNCssXeZ37ChgjB',
+        user: user,
+        pass: pass,
       },
     });
 
