@@ -7,15 +7,15 @@ import { Controller, Validation, HttpRequest, HttpResponse } from '@presentation
 export class SignUpControler implements Controller {
   private readonly addAccount: AddAccount;
   private readonly validation: Validation;
-  private readonly sendEmailConfirmation: SetEmailConfirmationToken;
+  private readonly setEmailConfirmation: SetEmailConfirmationToken;
   constructor(
     addAccount: AddAccount,
     validation: Validation,
-    sendEmailConfirmation: SetEmailConfirmationToken
+    setEmailConfirmation: SetEmailConfirmationToken
   ) {
     this.addAccount = addAccount;
     this.validation = validation;
-    this.sendEmailConfirmation = sendEmailConfirmation;
+    this.setEmailConfirmation = setEmailConfirmation;
   }
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -28,7 +28,7 @@ export class SignUpControler implements Controller {
       if (!account) {
         return forbidden(new EmailInUseError());
       }
-      await this.sendEmailConfirmation.send(email);
+      await this.setEmailConfirmation.set(email);
       return noContent();
     } catch (error) {
       return serverError(error);

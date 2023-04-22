@@ -1,6 +1,6 @@
-import { SendEmailConfirmationRepository } from '@data/protocols/db/mail';
+import { SendEmailConfirmation } from '@data/protocols/mail';
 
-export class SendEmailConfirmationRepositoryStub implements SendEmailConfirmationRepository {
+export class SendEmailConfirmationStub implements SendEmailConfirmation {
   async sendEmail(_email: string, _token: string): Promise<void> {
     return null;
   }
