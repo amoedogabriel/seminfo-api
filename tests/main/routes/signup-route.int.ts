@@ -20,13 +20,13 @@ describe('SignUp Route', () => {
     accountCollection.deleteMany({});
   });
 
-  it('Should return an account on success', async () => {
+  it('Should return 204 on success', async () => {
     const account = {
       name: 'any_name',
       email: 'any_email@mail.com',
       password: '@Valid123',
       passwordConfirmation: '@Valid123',
     };
-    await request(app).post('/signup').send(account).expect(200);
+    await request(app).post('/signup').send(account).expect(204);
   });
 });
