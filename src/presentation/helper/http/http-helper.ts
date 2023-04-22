@@ -40,5 +40,6 @@ export const unauthorized = (): HttpResponse => {
 export const noContent = (): HttpResponse => {
   return {
     statusCode: 204,
+    body: null,
   };
 };
