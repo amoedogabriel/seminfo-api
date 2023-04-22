@@ -4,5 +4,5 @@ export type HttpRequest = {
 
 export type HttpResponse = {
   statusCode: number;
-  body: any;
+  body?: any;
 };
