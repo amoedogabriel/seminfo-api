@@ -12,11 +12,11 @@ export class DbConfirmEmailToken implements ConfirmEmailToken {
     this.loadAccountByEmailRepository = loadAccountByEmailRepository;
     this.confirmEmailTokenRepository = confirmEmailTokenRepository;
   }
-  async confirm(email: string, _token: string): Promise<void> {
-    const account = await this.loadAccountByEmailRepository.loadByEmail(email);
+  async confirm(email: string, token: string): Promise<void> {
     const now = new Date();
     const expirationToken = now.setHours(now.getHours());
-    if (account && account.expirationToken > expirationToken) {
+    const account = await this.loadAccountByEmailRepository.loadByEmail(email);
+    if (account && account.expirationToken > expirationToken && account.confirmationToken === token) {
       await this.confirmEmailTokenRepository.confirmEmail(email);
     }
   }
