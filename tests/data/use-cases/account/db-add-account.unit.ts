@@ -1,8 +1,9 @@
 import { Hasher } from '@data/protocols/cryptography';
 import { AddAccountRepository, LoadAccountByEmailRepository } from '@data/protocols/db/account';
 import { DbAddAccount } from '@data/use-cases/account';
-import { makeFakeAddAccountData, makeFakeAddAccountResult } from '@tests/helper';
-import { HasherStub, AddAccountRepositoryStub, LoadAccountByEmailRepositoryStub } from '@tests/data/test';
+import { HasherStub, AddAccountRepositoryStub } from '@tests/data/test/account';
+import { makeFakeAddAccountData, makeFakeAddAccountResult } from '@tests/helper/account';
+import { LoadAccountByEmailRepositoryStub } from '@tests/data/test/account';
 
 type SutTypes = {
   sut: DbAddAccount;

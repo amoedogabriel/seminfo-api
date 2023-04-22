@@ -1,4 +1,4 @@
-import { SendEmailConfirmation } from '@domain/use-cases/send-email';
+import { SendEmailConfirmation } from '@domain/use-cases/mail';
 import { noContent, serverError } from '@presentation/helper/http/http-helper';
 import { Controller, HttpRequest, HttpResponse } from '@presentation/protocols';
 

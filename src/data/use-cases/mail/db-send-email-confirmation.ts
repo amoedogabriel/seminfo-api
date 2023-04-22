@@ -1,7 +1,7 @@
 import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
 import { SendEmailConfirmationRepository } from '@data/protocols/db/account/send-email-confirmation-repository';
-import { SetEmailConfirmationTokenRepository } from '@data/protocols/db/send-email';
-import { SendEmailConfirmation } from '@domain/use-cases/send-email';
+import { SetEmailConfirmationTokenRepository } from '@data/protocols/db/mail';
+import { SendEmailConfirmation } from '@domain/use-cases/mail';
 
 export class DbSendEmailConfirmation implements SendEmailConfirmation {
   private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository;

@@ -1,9 +1,9 @@
+import { Encrypter, HashCompare } from '@data/protocols/cryptography';
 import { LoadAccountByEmailRepository, UpdateAccessTokenRepository } from '@data/protocols/db/account';
 import { DbAuthentication } from '@data/use-cases/account';
-import { makeFakeAddAccountResult, makeFakeAuthenticationData } from '@tests/helper';
-import { EncrypterStub, HashCompareStub, UpdateAccessTokenRepositoryStub } from '@tests/data/test';
-import { Encrypter, HashCompare } from '@data/protocols/cryptography';
 import { AccountModel } from '@domain/models/account';
+import { UpdateAccessTokenRepositoryStub, EncrypterStub, HashCompareStub } from '@tests/data/test/account';
+import { makeFakeAddAccountResult, makeFakeAuthenticationData } from '@tests/helper/account';
 
 class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
   async loadByEmail(_email: string): Promise<AccountModel> {

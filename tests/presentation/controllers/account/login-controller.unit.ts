@@ -1,10 +1,10 @@
-import { LoginController } from '@presentation/controllers/login-controller';
-import { Validation } from '@presentation/protocols';
-import { AuthenticationStub, ValidationStub } from '../test';
-import { makeFakeAuthenticationRequest } from '@tests/helper';
 import { Authentication } from '@domain/use-cases/account';
+import { LoginController } from '@presentation/controllers/account/login-controller';
 import { MissingParamError } from '@presentation/errors';
-import { badRequest, serverError, ok, unauthorized } from '@presentation/helper/http/http-helper';
+import { badRequest, serverError, unauthorized, ok } from '@presentation/helper/http/http-helper';
+import { Validation } from '@presentation/protocols';
+import { makeFakeAuthenticationRequest } from '@tests/helper/account';
+import { ValidationStub, AuthenticationStub } from '@tests/presentation/test/account';
 
 type SutTypes = {
   sut: LoginController;

@@ -1,4 +1,4 @@
-import { SetEmailConfirmationTokenRepository } from '@data/protocols/db/send-email';
+import { SetEmailConfirmationTokenRepository } from '@data/protocols/db/mail';
 
 export class SetEmailConfirmationTokenRepositoryStub implements SetEmailConfirmationTokenRepository {
   async setToken(_email: string): Promise<string> {

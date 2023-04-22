@@ -1,5 +1,5 @@
 import { AddAccount } from '@domain/use-cases/account';
-import { SendEmailConfirmation } from '@domain/use-cases/send-email';
+import { SendEmailConfirmation } from '@domain/use-cases/mail';
 import { EmailInUseError } from '@presentation/errors';
 import { badRequest, forbidden, noContent, serverError } from '@presentation/helper/http/http-helper';
 import { Controller, Validation, HttpRequest, HttpResponse } from '@presentation/protocols';

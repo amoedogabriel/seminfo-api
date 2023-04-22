@@ -1,6 +1,6 @@
-import { EmailMongoRepository } from '@infra/db/email-mongo-repository';
+import { EmailMongoRepository } from '@infra/db/mail';
 import { MongoHelper } from '@infra/helper';
-import { makeFakeAddAccountData } from '@tests/helper';
+import { makeFakeAddAccountData } from '@tests/helper/account';
 import { Collection } from 'mongodb';
 
 let accountCollection: Collection;

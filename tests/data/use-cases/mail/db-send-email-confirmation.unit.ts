@@ -1,13 +1,12 @@
-import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
-import { SendEmailConfirmationRepository } from '@data/protocols/db/account/send-email-confirmation-repository';
-import { SetEmailConfirmationTokenRepository } from '@data/protocols/db/send-email';
+import { LoadAccountByEmailRepository, SendEmailConfirmationRepository } from '@data/protocols/db/account';
+import { SetEmailConfirmationTokenRepository } from '@data/protocols/db/mail';
 import { DbSendEmailConfirmation } from '@data/use-cases/mail';
 import { AccountModel } from '@domain/models/account';
 import {
-  SendEmailConfirmationRepositoryStub,
   SetEmailConfirmationTokenRepositoryStub,
-} from '@tests/data/test/send-email';
-import { makeFakeAddAccountResult } from '@tests/helper';
+  SendEmailConfirmationRepositoryStub,
+} from '@tests/data/test/mail';
+import { makeFakeAddAccountResult } from '@tests/helper/account';
 
 export class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
   async loadByEmail(_email: string): Promise<AccountModel> {

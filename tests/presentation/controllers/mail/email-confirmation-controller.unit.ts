@@ -1,4 +1,4 @@
-import { SendEmailConfirmation } from '@domain/use-cases/send-email';
+import { SendEmailConfirmation } from '@domain/use-cases/mail';
 import { EmailConfirmationController } from '@presentation/controllers/mail/email-confirmation-controller';
 import { noContent, serverError } from '@presentation/helper/http/http-helper';
 import { SendEmailConfirmationStub } from '@tests/presentation/test/mail';

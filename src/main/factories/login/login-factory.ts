@@ -1,8 +1,8 @@
 import { DbAuthentication } from '@data/use-cases/account';
 import { BCryptAdapter } from '@infra/cryptography/bcrypt';
 import { JwtAdapter } from '@infra/cryptography/jwt';
-import { AccountMongoRepository } from '@infra/db';
-import { LoginController } from '@presentation/controllers/login-controller';
+import { AccountMongoRepository } from '@infra/db/account';
+import { LoginController } from '@presentation/controllers/account/login-controller';
 import { makeLoginValidationFactory } from '@main/factories/login';
 import mongoEnv from '@main/config/mongo-env';
 
