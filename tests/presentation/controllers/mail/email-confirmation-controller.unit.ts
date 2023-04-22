@@ -17,7 +17,7 @@ const makeSut = (): SutTypes => {
 describe('EmailConfirmationController', () => {
   it('Should call SendEmailConfirmation with correct value', async () => {
     const { sut, sendEmailConfirmation } = makeSut();
-    const loadByEmailSpy = jest.spyOn(sendEmailConfirmation, 'send');
+    const loadByEmailSpy = jest.spyOn(sendEmailConfirmation, 'set');
     await sut.handle({ body: { email: 'valid_email@mail.com' } });
     expect(loadByEmailSpy).toHaveBeenCalledWith('valid_email@mail.com');
   });
@@ -30,7 +30,7 @@ describe('EmailConfirmationController', () => {
 
   it('Should return 500 if SendEmailConfirmation throws', async () => {
     const { sut, sendEmailConfirmation } = makeSut();
-    jest.spyOn(sendEmailConfirmation, 'send').mockReturnValueOnce(Promise.reject(serverError(new Error())));
+    jest.spyOn(sendEmailConfirmation, 'set').mockReturnValueOnce(Promise.reject(serverError(new Error())));
     const httpResponse = await sut.handle({ body: { email: 'valid_email@mail.com' } });
     expect(httpResponse).toEqual(serverError(new Error()));
   });

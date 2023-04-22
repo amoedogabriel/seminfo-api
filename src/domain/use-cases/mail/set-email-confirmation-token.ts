@@ -1,3 +1,3 @@
 export interface SetEmailConfirmationToken {
-  send(email: string): Promise<void>;
+  set(email: string): Promise<void>;
 }
