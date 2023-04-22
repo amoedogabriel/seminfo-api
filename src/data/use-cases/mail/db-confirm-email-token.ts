@@ -14,9 +14,10 @@ export class DbConfirmEmailToken implements ConfirmEmailToken {
   }
   async confirm(email: string, _token: string): Promise<void> {
     const account = await this.loadAccountByEmailRepository.loadByEmail(email);
-    if (account) {
+    const now = new Date();
+    const expirationToken = now.setHours(now.getHours());
+    if (account && account.expirationToken > expirationToken) {
       await this.confirmEmailTokenRepository.confirmEmail(email);
     }
-    return null;
   }
 }
