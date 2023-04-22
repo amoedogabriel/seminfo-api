@@ -13,7 +13,7 @@ class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
       name: 'any_name',
       email: 'any_email@mail.com',
       password: 'any_password',
-      confirmationToken: 'any_password',
+      confirmationToken: 'confirmation_token',
       expirationToken,
     };
   }
@@ -65,12 +65,31 @@ describe('DbConfirmEmailToken', () => {
         name: 'any_name',
         email: 'any_email@mail.com',
         password: 'any_password',
-        confirmationToken: 'any_password',
+        confirmationToken: 'confirmation_token',
         expirationToken,
       })
     );
     const confirmEmailSpy = jest.spyOn(confirmEmailToken, 'confirmEmail');
     await sut.confirm('valid_email@mail.com', 'confirmation_token');
+    expect(confirmEmailSpy).not.toHaveBeenCalled();
+  });
+
+  it('Should not call ConfirmEmailTokenRepository if token is invalid', async () => {
+    const { sut, loadAccountByEmail, confirmEmailToken } = makeSut();
+    const now = new Date();
+    const expirationToken = now.setHours(now.getHours()) + 1;
+    jest.spyOn(loadAccountByEmail, 'loadByEmail').mockReturnValueOnce(
+      Promise.resolve({
+        id: 'any_id',
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        confirmationToken: 'confirmation_token',
+        expirationToken,
+      })
+    );
+    const confirmEmailSpy = jest.spyOn(confirmEmailToken, 'confirmEmail');
+    await sut.confirm('valid_email@mail.com', 'other_token');
     expect(confirmEmailSpy).not.toHaveBeenCalled();
   });
 });
