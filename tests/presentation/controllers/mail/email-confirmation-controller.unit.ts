@@ -1,6 +1,6 @@
 import { SendEmailConfirmation } from '@domain/use-cases/send-email';
 import { EmailConfirmationController } from '@presentation/controllers/mail/email-confirmation-controller';
-import { noContent } from '@presentation/helper/http/http-helper';
+import { noContent, serverError } from '@presentation/helper/http/http-helper';
 import { SendEmailConfirmationStub } from '@tests/presentation/test/mail';
 
 type SutTypes = {
@@ -26,5 +26,12 @@ describe('EmailConfirmationController', () => {
     const { sut } = makeSut();
     const httpResponse = await sut.handle({ body: { email: 'valid_email@mail.com' } });
     expect(httpResponse).toEqual(noContent());
+  });
+
+  it('Should return 500 if SendEmailConfirmation throws', async () => {
+    const { sut, sendEmailConfirmation } = makeSut();
+    jest.spyOn(sendEmailConfirmation, 'send').mockReturnValueOnce(Promise.reject(serverError(new Error())));
+    const httpResponse = await sut.handle({ body: { email: 'valid_email@mail.com' } });
+    expect(httpResponse).toEqual(serverError(new Error()));
   });
 });
