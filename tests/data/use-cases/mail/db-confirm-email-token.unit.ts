@@ -1,16 +1,27 @@
 import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
+import { ConfirmEmailTokenRepository } from '@data/protocols/db/mail';
 import { DbConfirmEmailToken } from '@data/use-cases/mail';
-import { LoadAccountByEmailRepositoryStub } from '@tests/data/test/account';
+import { AccountModel } from '@domain/models/account';
+import { ConfirmEmailTokenRepositoryStub } from '@tests/data/test/mail';
+import { makeFakeAddAccountResult } from '@tests/helper/account';
+
+class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
+  async loadByEmail(_email: string): Promise<AccountModel> {
+    return makeFakeAddAccountResult();
+  }
+}
 
 type SutTypes = {
   sut: DbConfirmEmailToken;
   loadAccountByEmail: LoadAccountByEmailRepository;
+  confirmEmailToken: ConfirmEmailTokenRepository;
 };
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmail = new LoadAccountByEmailRepositoryStub();
-  const sut = new DbConfirmEmailToken(loadAccountByEmail);
-  return { sut, loadAccountByEmail };
+  const confirmEmailToken = new ConfirmEmailTokenRepositoryStub();
+  const sut = new DbConfirmEmailToken(loadAccountByEmail, confirmEmailToken);
+  return { sut, loadAccountByEmail, confirmEmailToken };
 };
 
 describe('DbConfirmEmailToken', () => {
@@ -19,5 +30,20 @@ describe('DbConfirmEmailToken', () => {
     const loadByEmailSpy = jest.spyOn(loadAccountByEmail, 'loadByEmail');
     await sut.confirm('valid_email@mail.com', 'confirmation_token');
     expect(loadByEmailSpy).toHaveBeenCalledWith('valid_email@mail.com');
+  });
+
+  it('Should call ConfirmEmailTokenRepository with correct value', async () => {
+    const { sut, confirmEmailToken } = makeSut();
+    const loadByEmailSpy = jest.spyOn(confirmEmailToken, 'confirmEmail');
+    await sut.confirm('valid_email@mail.com', 'confirmation_token');
+    expect(loadByEmailSpy).toHaveBeenCalledWith('valid_email@mail.com');
+  });
+
+  it('Should not call ConfirmEmailTokenRepository if account is null', async () => {
+    const { sut, loadAccountByEmail, confirmEmailToken } = makeSut();
+    jest.spyOn(loadAccountByEmail, 'loadByEmail').mockReturnValueOnce(null);
+    const confirmEmailSpy = jest.spyOn(confirmEmailToken, 'confirmEmail');
+    await sut.confirm('valid_email@mail.com', 'confirmation_token');
+    expect(confirmEmailSpy).not.toHaveBeenCalled();
   });
 });
