@@ -2,5 +2,5 @@ export type AddAccountModel = {
   name: string;
   email: string;
   password: string;
-  confirmedEmail?: boolean;
+  confirmedEmail: boolean;
 };

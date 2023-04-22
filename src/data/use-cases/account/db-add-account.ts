@@ -23,7 +23,6 @@ export class DbAddAccount implements AddAccount {
       const accountResult = await this.addAccountRepository.addAccount({
         ...account,
         password: hashedPassword,
-        confirmedEmail: false,
       });
       return accountResult;
     }
