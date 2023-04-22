@@ -42,12 +42,6 @@ describe('SignUpControler', () => {
     expect(httpResponse).toEqual(serverError(httpResponse.body.stack));
   });
 
-  it('Should return 204 if AddAccount succeeds', async () => {
-    const { sut } = makeSut();
-    const httpResponse = await sut.handle(makeFakeAccountRequest());
-    expect(httpResponse).toEqual(noContent());
-  });
-
   it('Should call Validation with correct values', async () => {
     const { sut, validation } = makeSut();
     const validSpy = jest.spyOn(validation, 'validate');
@@ -75,5 +69,11 @@ describe('SignUpControler', () => {
     const loadByEmailSpy = jest.spyOn(sendEmailConfirmation, 'send');
     await sut.handle({ body: { email: 'valid_email@mail.com' } });
     expect(loadByEmailSpy).toHaveBeenCalledWith('valid_email@mail.com');
+  });
+
+  it('Should return 204 if SendEmailConfirmation succeeds', async () => {
+    const { sut } = makeSut();
+    const httpResponse = await sut.handle(makeFakeAccountRequest());
+    expect(httpResponse).toEqual(noContent());
   });
 });
