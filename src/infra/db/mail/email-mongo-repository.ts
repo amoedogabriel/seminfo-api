@@ -1,5 +1,7 @@
-import { SendEmailConfirmationRepository } from '@data/protocols/db/account';
-import { SetEmailConfirmationTokenRepository } from '@data/protocols/db/mail';
+import {
+  SendEmailConfirmationRepository,
+  SetEmailConfirmationTokenRepository,
+} from '@data/protocols/db/mail';
 import { MongoHelper } from '@infra/helper';
 import { randomUUID } from 'crypto';
 import nodemailer from 'nodemailer';

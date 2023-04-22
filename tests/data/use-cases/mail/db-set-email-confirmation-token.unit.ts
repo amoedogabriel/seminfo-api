@@ -1,6 +1,9 @@
-import { LoadAccountByEmailRepository, SendEmailConfirmationRepository } from '@data/protocols/db/account';
-import { SetEmailConfirmationTokenRepository } from '@data/protocols/db/mail';
-import { DbSendEmailConfirmation } from '@data/use-cases/mail';
+import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
+import {
+  SendEmailConfirmationRepository,
+  SetEmailConfirmationTokenRepository,
+} from '@data/protocols/db/mail';
+import { DbSetEmailConfirmationToken } from '@data/use-cases/mail';
 import { AccountModel } from '@domain/models/account';
 import {
   SetEmailConfirmationTokenRepositoryStub,
@@ -15,7 +18,7 @@ export class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepos
 }
 
 type SutTypes = {
-  sut: DbSendEmailConfirmation;
+  sut: DbSetEmailConfirmationToken;
   loadAccountByEmail: LoadAccountByEmailRepository;
   setEmailConfirmationToken: SetEmailConfirmationTokenRepository;
   sendEmailConfirmation: SendEmailConfirmationRepository;
@@ -25,7 +28,7 @@ const makeSut = (): SutTypes => {
   const loadAccountByEmail = new LoadAccountByEmailRepositoryStub();
   const setEmailConfirmationToken = new SetEmailConfirmationTokenRepositoryStub();
   const sendEmailConfirmation = new SendEmailConfirmationRepositoryStub();
-  const sut = new DbSendEmailConfirmation(
+  const sut = new DbSetEmailConfirmationToken(
     loadAccountByEmail,
     setEmailConfirmationToken,
     sendEmailConfirmation

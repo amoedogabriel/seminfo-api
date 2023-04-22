@@ -1,15 +1,15 @@
-import { SendEmailConfirmation } from '@domain/use-cases/mail';
+import { SetEmailConfirmationToken } from '@domain/use-cases/mail';
 import { EmailConfirmationController } from '@presentation/controllers/mail/email-confirmation-controller';
 import { noContent, serverError } from '@presentation/helper/http/http-helper';
-import { SendEmailConfirmationStub } from '@tests/presentation/test/mail';
+import { SetEmailConfirmationStub } from '@tests/presentation/test/mail';
 
 type SutTypes = {
   sut: EmailConfirmationController;
-  sendEmailConfirmation: SendEmailConfirmation;
+  sendEmailConfirmation: SetEmailConfirmationToken;
 };
 
 const makeSut = (): SutTypes => {
-  const sendEmailConfirmation = new SendEmailConfirmationStub();
+  const sendEmailConfirmation = new SetEmailConfirmationStub();
   const sut = new EmailConfirmationController(sendEmailConfirmation);
   return { sut, sendEmailConfirmation };
 };

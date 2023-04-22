@@ -1,9 +1,11 @@
 import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
-import { SendEmailConfirmationRepository } from '@data/protocols/db/account/send-email-confirmation-repository';
-import { SetEmailConfirmationTokenRepository } from '@data/protocols/db/mail';
-import { SendEmailConfirmation } from '@domain/use-cases/mail';
+import {
+  SendEmailConfirmationRepository,
+  SetEmailConfirmationTokenRepository,
+} from '@data/protocols/db/mail';
+import { SetEmailConfirmationToken } from '@domain/use-cases/mail';
 
-export class DbSendEmailConfirmation implements SendEmailConfirmation {
+export class DbSetEmailConfirmationToken implements SetEmailConfirmationToken {
   private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository;
   private readonly setEmailConfirmationTokenRepository: SetEmailConfirmationTokenRepository;
   private readonly sendEmailConfirmationRepository: SendEmailConfirmationRepository;

@@ -1,5 +1,5 @@
 import { AddAccount } from '@domain/use-cases/account';
-import { SendEmailConfirmation } from '@domain/use-cases/mail';
+import { SetEmailConfirmationToken } from '@domain/use-cases/mail';
 import { EmailInUseError } from '@presentation/errors';
 import { badRequest, forbidden, noContent, serverError } from '@presentation/helper/http/http-helper';
 import { Controller, Validation, HttpRequest, HttpResponse } from '@presentation/protocols';
@@ -7,8 +7,12 @@ import { Controller, Validation, HttpRequest, HttpResponse } from '@presentation
 export class SignUpControler implements Controller {
   private readonly addAccount: AddAccount;
   private readonly validation: Validation;
-  private readonly sendEmailConfirmation: SendEmailConfirmation;
-  constructor(addAccount: AddAccount, validation: Validation, sendEmailConfirmation: SendEmailConfirmation) {
+  private readonly sendEmailConfirmation: SetEmailConfirmationToken;
+  constructor(
+    addAccount: AddAccount,
+    validation: Validation,
+    sendEmailConfirmation: SetEmailConfirmationToken
+  ) {
     this.addAccount = addAccount;
     this.validation = validation;
     this.sendEmailConfirmation = sendEmailConfirmation;

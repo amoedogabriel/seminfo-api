@@ -1,1 +1,2 @@
-export * from './db-send-email-confirmation';
+export * from './db-set-email-confirmation-token';
+export * from './db-confirm-email-token';

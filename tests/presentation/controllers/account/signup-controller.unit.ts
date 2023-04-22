@@ -1,24 +1,24 @@
 import { AddAccount } from '@domain/use-cases/account';
-import { SendEmailConfirmation } from '@domain/use-cases/mail';
+import { SetEmailConfirmationToken } from '@domain/use-cases/mail';
 import { SignUpControler } from '@presentation/controllers/account/signup-controller';
 import { MissingParamError, EmailInUseError } from '@presentation/errors';
 import { serverError, badRequest, forbidden, noContent } from '@presentation/helper/http/http-helper';
 import { Validation } from '@presentation/protocols';
 import { makeFakeAccountRequest } from '@tests/helper/account';
 import { AddAccountStub, ValidationStub } from '@tests/presentation/test/account';
-import { SendEmailConfirmationStub } from '@tests/presentation/test/mail';
+import { SetEmailConfirmationStub } from '@tests/presentation/test/mail';
 
 type SutTypes = {
   sut: SignUpControler;
   addAccount: AddAccount;
   validation: Validation;
-  sendEmailConfirmation: SendEmailConfirmation;
+  sendEmailConfirmation: SetEmailConfirmationToken;
 };
 
 const makeSut = (): SutTypes => {
   const addAccount = new AddAccountStub();
   const validation = new ValidationStub();
-  const sendEmailConfirmation = new SendEmailConfirmationStub();
+  const sendEmailConfirmation = new SetEmailConfirmationStub();
   const sut = new SignUpControler(addAccount, validation, sendEmailConfirmation);
   return { sut, addAccount, validation, sendEmailConfirmation };
 };

@@ -1,5 +1,5 @@
 import { DbAddAccount } from '@data/use-cases/account';
-import { DbSendEmailConfirmation } from '@data/use-cases/mail';
+import { DbSetEmailConfirmationToken } from '@data/use-cases/mail';
 import { BCryptAdapter } from '@infra/cryptography/bcrypt';
 import { AccountMongoRepository } from '@infra/db/account';
 import { EmailMongoRepository } from '@infra/db/mail';
@@ -14,7 +14,7 @@ export const makeSignupController = (): SignUpControler => {
   const sendEmailConfirmationAdapter = new EmailMongoRepository();
   const addAcount = new DbAddAccount(hasher, accountMongo, accountMongo);
   const validation = makeSignupValidation();
-  const sendEmailConfirmation = new DbSendEmailConfirmation(
+  const sendEmailConfirmation = new DbSetEmailConfirmationToken(
     accountMongo,
     sendMongo,
     sendEmailConfirmationAdapter
