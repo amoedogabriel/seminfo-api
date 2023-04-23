@@ -1,7 +1,7 @@
 import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
 import { ConfirmEmailTokenRepository, ValidateConfirmationTokenRepository } from '@data/protocols/db/mail';
 import { InvalidParamError, UnregisteredEmailError } from '@presentation/errors';
-import { badRequest, forbidden, ok } from '@presentation/helper/http/http-helper';
+import { badRequest, forbidden, ok, serverError } from '@presentation/helper/http/http-helper';
 import { Controller, HttpRequest, HttpResponse } from '@presentation/protocols';
 
 export class EmailConfirmationController implements Controller {
@@ -18,16 +18,20 @@ export class EmailConfirmationController implements Controller {
     this.confirmEmailTokenRepository = confirmEmailTokenRepository;
   }
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-    const { email, confirmationToken } = httpRequest;
-    const account = await this.loadAccountByEmailRepository.loadByEmail(email);
-    if (!account) {
-      return forbidden(new UnregisteredEmailError(email));
+    try {
+      const { email, confirmationToken } = httpRequest;
+      const account = await this.loadAccountByEmailRepository.loadByEmail(email);
+      if (!account) {
+        return forbidden(new UnregisteredEmailError(email));
+      }
+      const isValid = await this.validateConfirmationTokenRepository.validate(email, confirmationToken);
+      if (!isValid) {
+        return badRequest(new InvalidParamError('confirmationToken'));
+      }
+      const accesToken = await this.confirmEmailTokenRepository.confirmEmail(email);
+      return ok(accesToken);
+    } catch (error) {
+      return serverError(error);
     }
-    const isValid = await this.validateConfirmationTokenRepository.validate(email, confirmationToken);
-    if (!isValid) {
-      return badRequest(new InvalidParamError('confirmationToken'));
-    }
-    const accesToken = await this.confirmEmailTokenRepository.confirmEmail(email);
-    return ok(accesToken);
   }
 }
