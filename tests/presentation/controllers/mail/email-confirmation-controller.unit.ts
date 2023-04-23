@@ -3,7 +3,7 @@ import { ConfirmEmailTokenRepository, ValidateConfirmationTokenRepository } from
 import { AccountModel } from '@domain/models/account';
 import { EmailConfirmationController } from '@presentation/controllers/mail';
 import { InvalidParamError, UnregisteredEmailError } from '@presentation/errors';
-import { badRequest, forbidden, ok } from '@presentation/helper/http/http-helper';
+import { badRequest, forbidden, ok, serverError } from '@presentation/helper/http/http-helper';
 import { ConfirmEmailTokenRepositoryStub } from '@tests/data/test/mail';
 import { makeFakeAddAccountResult } from '@tests/helper/account';
 import { ValidateConfirmationTokenRepositoryStub } from '@tests/presentation/test/mail';
@@ -51,6 +51,16 @@ describe('EmailConfirmationController', () => {
     expect(httpResponse).toEqual(forbidden(new UnregisteredEmailError('valid_email@mail.com')));
   });
 
+  it('Should return 500 if LoadAccountByEmailRepository throws', async () => {
+    const { sut, loadAccountByEmail } = makeSut();
+    jest.spyOn(loadAccountByEmail, 'loadByEmail').mockRejectedValueOnce(new Error());
+    const httpResponse = await sut.handle({
+      email: 'valid_email@mail.com',
+      confirmationToken: 'valid_token',
+    });
+    expect(httpResponse).toEqual(serverError(new Error()));
+  });
+
   it('Should call ValidateConfirmationTokenRepository with correct values', async () => {
     const { sut, validateConfirmationToken } = makeSut();
     const validateSpy = jest.spyOn(validateConfirmationToken, 'validate');
@@ -68,6 +78,16 @@ describe('EmailConfirmationController', () => {
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('confirmationToken')));
   });
 
+  it('Should return 500 if ValidateConfirmationTokenRepository throws', async () => {
+    const { sut, validateConfirmationToken } = makeSut();
+    jest.spyOn(validateConfirmationToken, 'validate').mockRejectedValueOnce(new Error());
+    const httpResponse = await sut.handle({
+      email: 'valid_email@mail.com',
+      confirmationToken: 'valid_token',
+    });
+    expect(httpResponse).toEqual(serverError(new Error()));
+  });
+
   it('Should call ConfirmEmailTokenRepository with correct values', async () => {
     const { sut, confirmEmailToken } = makeSut();
     const confirmEmailSpy = jest.spyOn(confirmEmailToken, 'confirmEmail');
@@ -82,5 +102,15 @@ describe('EmailConfirmationController', () => {
       confirmationToken: 'valid_token',
     });
     expect(httpResponse).toEqual(ok('valid_access_token'));
+  });
+
+  it('Should return 500 if ConfirmEmailTokenRepository throws', async () => {
+    const { sut, confirmEmailToken } = makeSut();
+    jest.spyOn(confirmEmailToken, 'confirmEmail').mockRejectedValueOnce(new Error());
+    const httpResponse = await sut.handle({
+      email: 'valid_email@mail.com',
+      confirmationToken: 'valid_token',
+    });
+    expect(httpResponse).toEqual(serverError(new Error()));
   });
 });
