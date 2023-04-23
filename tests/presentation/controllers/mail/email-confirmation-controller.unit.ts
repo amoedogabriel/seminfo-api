@@ -3,7 +3,7 @@ import { ConfirmEmailTokenRepository, ValidateConfirmationTokenRepository } from
 import { AccountModel } from '@domain/models/account';
 import { EmailConfirmationController } from '@presentation/controllers/mail';
 import { InvalidParamError, UnregisteredEmailError } from '@presentation/errors';
-import { badRequest, forbidden } from '@presentation/helper/http/http-helper';
+import { badRequest, forbidden, ok } from '@presentation/helper/http/http-helper';
 import { ConfirmEmailTokenRepositoryStub } from '@tests/data/test/mail';
 import { makeFakeAddAccountResult } from '@tests/helper/account';
 import { ValidateConfirmationTokenRepositoryStub } from '@tests/presentation/test/mail';
@@ -73,5 +73,14 @@ describe('EmailConfirmationController', () => {
     const confirmEmailSpy = jest.spyOn(confirmEmailToken, 'confirmEmail');
     await sut.handle({ email: 'valid_email@mail.com', confirmationToken: 'valid_token' });
     expect(confirmEmailSpy).toHaveBeenCalledWith('valid_email@mail.com');
+  });
+
+  it('Should return an access token if ConfirmEmailTokenRepository succeeds', async () => {
+    const { sut } = makeSut();
+    const httpResponse = await sut.handle({
+      email: 'valid_email@mail.com',
+      confirmationToken: 'valid_token',
+    });
+    expect(httpResponse).toEqual(ok('valid_access_token'));
   });
 });
