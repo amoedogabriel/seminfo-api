@@ -28,4 +28,21 @@ describe('SendEmailMongoRepository', () => {
     expect(account.confirmationToken).toEqual(token);
     expect(account.expirationToken).toBeTruthy();
   });
+
+  it('Should confirm email on confirmedEmail true', async () => {
+    const sut = new EmailMongoRepository();
+    const accountData = makeFakeAddAccountData();
+    const accountId = await accountCollection.insertOne(accountData).then((data) => data.insertedId);
+    await sut.setToken('any_email@mail.com');
+    await accountCollection.updateOne(
+      { email: 'any_email@mail.com' },
+      {
+        $set: {
+          confirmedEmail: true,
+        },
+      }
+    );
+    const account = await accountCollection.findOne(accountId);
+    expect(account.confirmedEmail).toEqual(true);
+  });
 });
