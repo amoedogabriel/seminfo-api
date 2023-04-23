@@ -135,4 +135,14 @@ describe('EmailConfirmationController', () => {
     });
     expect(httpResponse).toEqual(ok('any_token'));
   });
+
+  it('Should return 500 if Authentication throws', async () => {
+    const { sut, authentication } = makeSut();
+    jest.spyOn(authentication, 'auth').mockReturnValueOnce(Promise.reject(serverError(new Error())));
+    const httpResponse = await sut.handle({
+      email: 'valid_email@mail.com',
+      confirmationToken: 'valid_token',
+    });
+    expect(httpResponse).toEqual(serverError(new Error()));
+  });
 });
