@@ -4,7 +4,7 @@ import { AccountModel } from '@domain/models/account';
 import { Authentication } from '@domain/use-cases/account';
 import { EmailConfirmationController } from '@presentation/controllers/mail';
 import { InvalidParamError, UnregisteredEmailError } from '@presentation/errors';
-import { badRequest, forbidden, ok, serverError } from '@presentation/helper/http/http-helper';
+import { badRequest, forbidden, ok, serverError, unauthorized } from '@presentation/helper/http/http-helper';
 import { ConfirmEmailTokenRepositoryStub } from '@tests/data/test/mail';
 import { makeFakeAddAccountResult } from '@tests/helper/account';
 import { AuthenticationStub } from '@tests/presentation/test/account';
@@ -124,5 +124,15 @@ describe('EmailConfirmationController', () => {
     const confirmEmailSpy = jest.spyOn(authentication, 'auth');
     await sut.handle({ email: 'valid_email@mail.com', confirmationToken: 'valid_token' });
     expect(confirmEmailSpy).toHaveBeenCalledWith({ email: 'valid_email@mail.com', password: 'any_password' });
+  });
+
+  it('Should return 401 if Authentication returns null', async () => {
+    const { sut, authentication } = makeSut();
+    jest.spyOn(authentication, 'auth').mockReturnValueOnce(null);
+    const httpResponse = await sut.handle({
+      email: 'valid_email@mail.com',
+      confirmationToken: 'valid_token',
+    });
+    expect(httpResponse).toEqual(unauthorized());
   });
 });
