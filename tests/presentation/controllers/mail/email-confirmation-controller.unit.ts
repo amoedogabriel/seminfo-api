@@ -2,8 +2,8 @@ import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
 import { ConfirmEmailTokenRepository, ValidateConfirmationTokenRepository } from '@data/protocols/db/mail';
 import { AccountModel } from '@domain/models/account';
 import { EmailConfirmationController } from '@presentation/controllers/mail';
-import { UnregisteredEmailError } from '@presentation/errors';
-import { forbidden } from '@presentation/helper/http/http-helper';
+import { InvalidParamError, UnregisteredEmailError } from '@presentation/errors';
+import { badRequest, forbidden } from '@presentation/helper/http/http-helper';
 import { ConfirmEmailTokenRepositoryStub } from '@tests/data/test/mail';
 import { makeFakeAddAccountResult } from '@tests/helper/account';
 import { ValidateConfirmationTokenRepositoryStub } from '@tests/presentation/test/mail';
@@ -56,6 +56,16 @@ describe('EmailConfirmationController', () => {
     const validateSpy = jest.spyOn(validateConfirmationToken, 'validate');
     await sut.handle({ email: 'valid_email@mail.com', confirmationToken: 'valid_token' });
     expect(validateSpy).toHaveBeenCalledWith('valid_email@mail.com', 'valid_token');
+  });
+
+  it('Should return 400 if ValidateConfirmationTokenRepository is invalid', async () => {
+    const { sut, validateConfirmationToken } = makeSut();
+    jest.spyOn(validateConfirmationToken, 'validate').mockReturnValueOnce(Promise.resolve(false));
+    const httpResponse = await sut.handle({
+      email: 'valid_email@mail.com',
+      confirmationToken: 'valid_token',
+    });
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('confirmationToken')));
   });
 
   it('Should call ConfirmEmailTokenRepository with correct values', async () => {
