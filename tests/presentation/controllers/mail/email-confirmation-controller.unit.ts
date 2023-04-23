@@ -3,7 +3,7 @@ import { ConfirmEmailTokenRepository, ValidateConfirmationTokenRepository } from
 import { AccountModel } from '@domain/models/account';
 import { Authentication } from '@domain/use-cases/account';
 import { EmailConfirmationController } from '@presentation/controllers/mail';
-import { InvalidParamError, UnregisteredEmailError } from '@presentation/errors';
+import { ExpiredTokenError, InvalidParamError, UnregisteredEmailError } from '@presentation/errors';
 import { badRequest, forbidden, ok, serverError, unauthorized } from '@presentation/helper/http/http-helper';
 import { ConfirmEmailTokenRepositoryStub } from '@tests/data/test/mail';
 import { makeFakeAddAccountResult } from '@tests/helper/account';
@@ -144,5 +144,27 @@ describe('EmailConfirmationController', () => {
       confirmationToken: 'valid_token',
     });
     expect(httpResponse).toEqual(serverError(new Error()));
+  });
+
+  it('Should return 401 if confirmationToken is expired', async () => {
+    const { sut, loadAccountByEmail } = makeSut();
+    const now = new Date();
+    const nowToNumber = now.setHours(now.getHours() - 1);
+    jest.spyOn(loadAccountByEmail, 'loadByEmail').mockReturnValueOnce(
+      Promise.resolve({
+        id: 'any_id',
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        confirmedEmail: 'false',
+        confirmationToken: 'any_token',
+        expirationToken: nowToNumber,
+      })
+    );
+    const httpResponse = await sut.handle({
+      email: 'valid_email@mail.com',
+      confirmationToken: 'valid_token',
+    });
+    expect(httpResponse).toEqual(badRequest(new ExpiredTokenError()));
   });
 });
