@@ -2,7 +2,7 @@ import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
 import { ConfirmEmailTokenRepository, ValidateConfirmationTokenRepository } from '@data/protocols/db/mail';
 import { Authentication } from '@domain/use-cases/account';
 import { InvalidParamError, UnregisteredEmailError } from '@presentation/errors';
-import { badRequest, forbidden, ok, serverError } from '@presentation/helper/http/http-helper';
+import { badRequest, forbidden, ok, serverError, unauthorized } from '@presentation/helper/http/http-helper';
 import { Controller, HttpRequest, HttpResponse } from '@presentation/protocols';
 
 export class EmailConfirmationController implements Controller {
@@ -34,6 +34,9 @@ export class EmailConfirmationController implements Controller {
       }
       await this.confirmEmailTokenRepository.confirmEmail(email);
       const accessToken = await this.authentication.auth({ email, password: account.password });
+      if (!accessToken) {
+        return unauthorized();
+      }
       return ok(accessToken);
     } catch (error) {
       return serverError(error);
