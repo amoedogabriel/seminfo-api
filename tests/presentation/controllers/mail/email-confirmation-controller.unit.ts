@@ -100,15 +100,6 @@ describe('EmailConfirmationController', () => {
     expect(confirmEmailSpy).toHaveBeenCalledWith('valid_email@mail.com');
   });
 
-  it('Should return an access token if ConfirmEmailTokenRepository succeeds', async () => {
-    const { sut } = makeSut();
-    const httpResponse = await sut.handle({
-      email: 'valid_email@mail.com',
-      confirmationToken: 'valid_token',
-    });
-    expect(httpResponse).toEqual(ok('any_token'));
-  });
-
   it('Should return 500 if ConfirmEmailTokenRepository throws', async () => {
     const { sut, confirmEmailToken } = makeSut();
     jest.spyOn(confirmEmailToken, 'confirmEmail').mockRejectedValueOnce(new Error());
@@ -134,5 +125,14 @@ describe('EmailConfirmationController', () => {
       confirmationToken: 'valid_token',
     });
     expect(httpResponse).toEqual(unauthorized());
+  });
+
+  it('Should return 200 if Authentication succeeds', async () => {
+    const { sut } = makeSut();
+    const httpResponse = await sut.handle({
+      email: 'valid_email@mail.com',
+      confirmationToken: 'valid_token',
+    });
+    expect(httpResponse).toEqual(ok('any_token'));
   });
 });
