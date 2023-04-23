@@ -1,23 +1,23 @@
 import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
-import { ConfirmEmailTokenRepository, ValidateConfirmationTokenRepository } from '@data/protocols/db/mail';
+import { ConfirmEmailRepository, ValidateEmailTokenRepository } from '@data/protocols/db/mail';
 import { Authentication } from '@domain/use-cases/account';
 import { InvalidParamError, UnregisteredEmailError, ExpiredTokenError } from '@presentation/errors';
 import { badRequest, forbidden, ok, serverError, unauthorized } from '@presentation/helper/http/http-helper';
 import { Controller, HttpRequest, HttpResponse } from '@presentation/protocols';
 
-export class EmailConfirmationController implements Controller {
+export class ConfirmEmailController implements Controller {
   private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository;
-  private readonly validateConfirmationTokenRepository: ValidateConfirmationTokenRepository;
-  private readonly confirmEmailTokenRepository: ConfirmEmailTokenRepository;
+  private readonly validateEmailTokenRepository: ValidateEmailTokenRepository;
+  private readonly confirmEmailTokenRepository: ConfirmEmailRepository;
   private readonly authentication: Authentication;
   constructor(
     loadAccountByEmailRepository: LoadAccountByEmailRepository,
-    validateConfirmationTokenRepository: ValidateConfirmationTokenRepository,
-    confirmEmailTokenRepository: ConfirmEmailTokenRepository,
+    validateEmailTokenRepository: ValidateEmailTokenRepository,
+    confirmEmailTokenRepository: ConfirmEmailRepository,
     authentication: Authentication
   ) {
     this.loadAccountByEmailRepository = loadAccountByEmailRepository;
-    this.validateConfirmationTokenRepository = validateConfirmationTokenRepository;
+    this.validateEmailTokenRepository = validateEmailTokenRepository;
     this.confirmEmailTokenRepository = confirmEmailTokenRepository;
     this.authentication = authentication;
   }
@@ -31,7 +31,10 @@ export class EmailConfirmationController implements Controller {
       if (!account) {
         return forbidden(new UnregisteredEmailError(email));
       }
-      const isValid = await this.validateConfirmationTokenRepository.validate(email, confirmationToken);
+      const isValid = await this.validateEmailTokenRepository.validate({
+        email,
+        token: confirmationToken,
+      });
       if (!isValid) {
         return badRequest(new InvalidParamError('confirmationToken'));
       }

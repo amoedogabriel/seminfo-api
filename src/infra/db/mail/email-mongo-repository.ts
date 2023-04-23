@@ -1,10 +1,8 @@
-import { ConfirmEmailTokenRepository, SetEmailConfirmationTokenRepository } from '@data/protocols/db/mail';
+import { ConfirmEmailRepository, SetEmailConfirmationTokenRepository } from '@data/protocols/db/mail';
 import { MongoHelper } from '@infra/helper';
 import { randomUUID } from 'crypto';
 
-export class EmailMongoRepository
-  implements SetEmailConfirmationTokenRepository, ConfirmEmailTokenRepository
-{
+export class EmailMongoRepository implements SetEmailConfirmationTokenRepository, ConfirmEmailRepository {
   async setToken(email: string): Promise<string> {
     const confirmationToken = randomUUID();
     const now = new Date();
@@ -28,7 +26,7 @@ export class EmailMongoRepository
       { email },
       {
         $set: {
-          confirmedEmail: true,
+          activated: true,
         },
       }
     );

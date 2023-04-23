@@ -27,7 +27,7 @@ describe('Login Route', () => {
       name: 'Breno Gonzaga',
       email: 'any_email@mail.com',
       password,
-      confirmedEmail: true,
+      activated: true,
     });
     const loginAccount = { email: 'any_email@mail.com', password: '@Valid123' };
     await request(app).post('/login').send(loginAccount).expect(200);

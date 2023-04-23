@@ -1,2 +1,2 @@
 export * from './set-email-confirmation-token';
-export * from './confirm-email-token';
+export * from './confirm-email';

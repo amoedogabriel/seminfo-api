@@ -1,3 +1,3 @@
-export interface ConfirmEmailTokenRepository {
+export interface ConfirmEmailRepository {
   confirmEmail(email: string): Promise<void>;
 }

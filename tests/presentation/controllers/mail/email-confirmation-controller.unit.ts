@@ -1,14 +1,14 @@
 import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
-import { ConfirmEmailTokenRepository, ValidateConfirmationTokenRepository } from '@data/protocols/db/mail';
+import { ConfirmEmailRepository, ValidateEmailTokenRepository } from '@data/protocols/db/mail';
 import { AccountModel } from '@domain/models/account';
 import { Authentication } from '@domain/use-cases/account';
-import { EmailConfirmationController } from '@presentation/controllers/mail';
+import { ConfirmEmailController } from '@presentation/controllers/mail';
 import { ExpiredTokenError, InvalidParamError, UnregisteredEmailError } from '@presentation/errors';
 import { badRequest, forbidden, ok, serverError, unauthorized } from '@presentation/helper/http/http-helper';
 import { ConfirmEmailTokenRepositoryStub } from '@tests/data/test/mail';
 import { makeFakeAddAccountResult } from '@tests/helper/account';
 import { AuthenticationStub } from '@tests/presentation/test/account';
-import { ValidateConfirmationTokenRepositoryStub } from '@tests/presentation/test/mail';
+import { ValidateEmailTokenRepositoryStub } from '@tests/presentation/test/mail';
 
 const httpRequest = {
   body: {
@@ -24,19 +24,19 @@ export class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepos
 }
 
 type SutTypes = {
-  sut: EmailConfirmationController;
+  sut: ConfirmEmailController;
   loadAccountByEmail: LoadAccountByEmailRepository;
-  validateConfirmationToken: ValidateConfirmationTokenRepository;
-  confirmEmailToken: ConfirmEmailTokenRepository;
+  validateConfirmationToken: ValidateEmailTokenRepository;
+  confirmEmailToken: ConfirmEmailRepository;
   authentication: Authentication;
 };
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmail = new LoadAccountByEmailRepositoryStub();
-  const validateConfirmationToken = new ValidateConfirmationTokenRepositoryStub();
+  const validateConfirmationToken = new ValidateEmailTokenRepositoryStub();
   const confirmEmailToken = new ConfirmEmailTokenRepositoryStub();
   const authentication = new AuthenticationStub();
-  const sut = new EmailConfirmationController(
+  const sut = new ConfirmEmailController(
     loadAccountByEmail,
     validateConfirmationToken,
     confirmEmailToken,
@@ -67,21 +67,21 @@ describe('EmailConfirmationController', () => {
     expect(httpResponse).toEqual(serverError(new Error()));
   });
 
-  it('Should call ValidateConfirmationTokenRepository with correct values', async () => {
+  it('Should call validateEmailTokenRepository with correct values', async () => {
     const { sut, validateConfirmationToken } = makeSut();
     const validateSpy = jest.spyOn(validateConfirmationToken, 'validate');
     await sut.handle(httpRequest);
-    expect(validateSpy).toHaveBeenCalledWith('valid_email@mail.com', 'valid_token');
+    expect(validateSpy).toHaveBeenCalledWith({ email: 'valid_email@mail.com', token: 'valid_token' });
   });
 
-  it('Should return 400 if ValidateConfirmationTokenRepository is invalid', async () => {
+  it('Should return 400 if validateEmailTokenRepository is invalid', async () => {
     const { sut, validateConfirmationToken } = makeSut();
     jest.spyOn(validateConfirmationToken, 'validate').mockReturnValueOnce(Promise.resolve(false));
     const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('confirmationToken')));
   });
 
-  it('Should return 500 if ValidateConfirmationTokenRepository throws', async () => {
+  it('Should return 500 if validateEmailTokenRepository throws', async () => {
     const { sut, validateConfirmationToken } = makeSut();
     jest.spyOn(validateConfirmationToken, 'validate').mockRejectedValueOnce(new Error());
     const httpResponse = await sut.handle(httpRequest);
@@ -139,7 +139,7 @@ describe('EmailConfirmationController', () => {
         name: 'any_name',
         email: 'any_email@mail.com',
         password: 'any_password',
-        confirmedEmail: 'false',
+        activated: false,
         confirmationToken: 'any_token',
         expirationToken: nowToNumber,
       })

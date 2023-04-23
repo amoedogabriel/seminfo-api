@@ -6,5 +6,6 @@ export const makeFakeAddAccountResult = (): AccountModel => {
     name: 'any_name',
     email: 'any_email@mail.com',
     password: 'any_password',
+    activated: false,
   };
 };

@@ -1,3 +1,5 @@
-export interface ValidateConfirmationTokenRepository {
-  validate(email: string, token: string): Promise<boolean>;
+import { ConfirmEmailModel } from '@domain/models/mail';
+
+export interface ValidateEmailTokenRepository {
+  validate(data: ConfirmEmailModel): Promise<boolean>;
 }

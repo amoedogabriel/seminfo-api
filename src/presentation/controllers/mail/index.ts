@@ -1,1 +1,1 @@
-export * from './email-confirmation-controller';
+export * from './confirm-email-controller';
