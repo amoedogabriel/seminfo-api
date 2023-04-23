@@ -1,5 +1,7 @@
 import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
 import { ConfirmEmailTokenRepository, ValidateConfirmationTokenRepository } from '@data/protocols/db/mail';
+import { UnregisteredEmailError } from '@presentation/errors';
+import { forbidden } from '@presentation/helper/http/http-helper';
 import { Controller, HttpRequest, HttpResponse } from '@presentation/protocols';
 
 export class EmailConfirmationController implements Controller {
@@ -17,7 +19,10 @@ export class EmailConfirmationController implements Controller {
   }
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     const { email, confirmationToken } = httpRequest;
-    await this.loadAccountByEmailRepository.loadByEmail(email);
+    const account = await this.loadAccountByEmailRepository.loadByEmail(email);
+    if (!account) {
+      return forbidden(new UnregisteredEmailError(email));
+    }
     await this.validateConfirmationTokenRepository.validate(email, confirmationToken);
     await this.confirmEmailTokenRepository.confirmEmail(email);
     return null;
