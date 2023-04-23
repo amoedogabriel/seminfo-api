@@ -1,5 +1,6 @@
 import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
 import { ConfirmEmailTokenRepository, ValidateConfirmationTokenRepository } from '@data/protocols/db/mail';
+import { Authentication } from '@domain/use-cases/account';
 import { InvalidParamError, UnregisteredEmailError } from '@presentation/errors';
 import { badRequest, forbidden, ok, serverError } from '@presentation/helper/http/http-helper';
 import { Controller, HttpRequest, HttpResponse } from '@presentation/protocols';
@@ -8,14 +9,17 @@ export class EmailConfirmationController implements Controller {
   private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository;
   private readonly validateConfirmationTokenRepository: ValidateConfirmationTokenRepository;
   private readonly confirmEmailTokenRepository: ConfirmEmailTokenRepository;
+  private readonly authentication: Authentication;
   constructor(
     loadAccountByEmailRepository: LoadAccountByEmailRepository,
     validateConfirmationTokenRepository: ValidateConfirmationTokenRepository,
-    confirmEmailTokenRepository: ConfirmEmailTokenRepository
+    confirmEmailTokenRepository: ConfirmEmailTokenRepository,
+    authentication: Authentication
   ) {
     this.loadAccountByEmailRepository = loadAccountByEmailRepository;
     this.validateConfirmationTokenRepository = validateConfirmationTokenRepository;
     this.confirmEmailTokenRepository = confirmEmailTokenRepository;
+    this.authentication = authentication;
   }
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -28,8 +32,9 @@ export class EmailConfirmationController implements Controller {
       if (!isValid) {
         return badRequest(new InvalidParamError('confirmationToken'));
       }
-      const accesToken = await this.confirmEmailTokenRepository.confirmEmail(email);
-      return ok(accesToken);
+      await this.confirmEmailTokenRepository.confirmEmail(email);
+      const accessToken = await this.authentication.auth({ email, password: account.password });
+      return ok(accessToken);
     } catch (error) {
       return serverError(error);
     }
