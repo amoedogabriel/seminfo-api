@@ -25,7 +25,7 @@ export class EmailConfirmationController implements Controller {
     try {
       const now = new Date();
       const nowToNumber = now.setHours(now.getHours());
-      const { email, confirmationToken } = httpRequest;
+      const { email, confirmationToken } = httpRequest.body;
 
       const account = await this.loadAccountByEmailRepository.loadByEmail(email);
       if (!account) {
