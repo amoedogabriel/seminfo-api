@@ -1,7 +1,7 @@
 import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
 import { ConfirmEmailTokenRepository, ValidateConfirmationTokenRepository } from '@data/protocols/db/mail';
-import { UnregisteredEmailError } from '@presentation/errors';
-import { forbidden } from '@presentation/helper/http/http-helper';
+import { InvalidParamError, UnregisteredEmailError } from '@presentation/errors';
+import { badRequest, forbidden } from '@presentation/helper/http/http-helper';
 import { Controller, HttpRequest, HttpResponse } from '@presentation/protocols';
 
 export class EmailConfirmationController implements Controller {
@@ -23,7 +23,10 @@ export class EmailConfirmationController implements Controller {
     if (!account) {
       return forbidden(new UnregisteredEmailError(email));
     }
-    await this.validateConfirmationTokenRepository.validate(email, confirmationToken);
+    const isValid = await this.validateConfirmationTokenRepository.validate(email, confirmationToken);
+    if (!isValid) {
+      return badRequest(new InvalidParamError('confirmationToken'));
+    }
     await this.confirmEmailTokenRepository.confirmEmail(email);
     return null;
   }
