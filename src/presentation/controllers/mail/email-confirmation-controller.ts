@@ -1,19 +1,14 @@
-import { SetEmailConfirmationToken } from '@domain/use-cases/mail';
-import { noContent, serverError } from '@presentation/helper/http/http-helper';
+import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
 import { Controller, HttpRequest, HttpResponse } from '@presentation/protocols';
 
 export class EmailConfirmationController implements Controller {
-  private readonly setEmailConfirmation: SetEmailConfirmationToken;
-  constructor(setEmailConfirmation: SetEmailConfirmationToken) {
-    this.setEmailConfirmation = setEmailConfirmation;
+  private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository;
+  constructor(loadAccountByEmailRepository: LoadAccountByEmailRepository) {
+    this.loadAccountByEmailRepository = loadAccountByEmailRepository;
   }
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-    try {
-      const { email } = httpRequest.body;
-      await this.setEmailConfirmation.set(email);
-      return noContent();
-    } catch (error) {
-      return serverError(error);
-    }
+    const { email } = httpRequest.body;
+    await this.loadAccountByEmailRepository.loadByEmail(email);
+    return null;
   }
 }
