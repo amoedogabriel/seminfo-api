@@ -1,11 +1,13 @@
 import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
 import { ConfirmEmailTokenRepository, ValidateConfirmationTokenRepository } from '@data/protocols/db/mail';
 import { AccountModel } from '@domain/models/account';
+import { Authentication } from '@domain/use-cases/account';
 import { EmailConfirmationController } from '@presentation/controllers/mail';
 import { InvalidParamError, UnregisteredEmailError } from '@presentation/errors';
 import { badRequest, forbidden, ok, serverError } from '@presentation/helper/http/http-helper';
 import { ConfirmEmailTokenRepositoryStub } from '@tests/data/test/mail';
 import { makeFakeAddAccountResult } from '@tests/helper/account';
+import { AuthenticationStub } from '@tests/presentation/test/account';
 import { ValidateConfirmationTokenRepositoryStub } from '@tests/presentation/test/mail';
 
 export class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
@@ -19,18 +21,21 @@ type SutTypes = {
   loadAccountByEmail: LoadAccountByEmailRepository;
   validateConfirmationToken: ValidateConfirmationTokenRepository;
   confirmEmailToken: ConfirmEmailTokenRepository;
+  authentication: Authentication;
 };
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmail = new LoadAccountByEmailRepositoryStub();
   const validateConfirmationToken = new ValidateConfirmationTokenRepositoryStub();
   const confirmEmailToken = new ConfirmEmailTokenRepositoryStub();
+  const authentication = new AuthenticationStub();
   const sut = new EmailConfirmationController(
     loadAccountByEmail,
     validateConfirmationToken,
-    confirmEmailToken
+    confirmEmailToken,
+    authentication
   );
-  return { sut, loadAccountByEmail, validateConfirmationToken, confirmEmailToken };
+  return { sut, loadAccountByEmail, validateConfirmationToken, confirmEmailToken, authentication };
 };
 
 describe('EmailConfirmationController', () => {
@@ -101,7 +106,7 @@ describe('EmailConfirmationController', () => {
       email: 'valid_email@mail.com',
       confirmationToken: 'valid_token',
     });
-    expect(httpResponse).toEqual(ok('valid_access_token'));
+    expect(httpResponse).toEqual(ok('any_token'));
   });
 
   it('Should return 500 if ConfirmEmailTokenRepository throws', async () => {
@@ -112,5 +117,12 @@ describe('EmailConfirmationController', () => {
       confirmationToken: 'valid_token',
     });
     expect(httpResponse).toEqual(serverError(new Error()));
+  });
+
+  it('Should call Authentication with correct values', async () => {
+    const { sut, authentication } = makeSut();
+    const confirmEmailSpy = jest.spyOn(authentication, 'auth');
+    await sut.handle({ email: 'valid_email@mail.com', confirmationToken: 'valid_token' });
+    expect(confirmEmailSpy).toHaveBeenCalledWith({ email: 'valid_email@mail.com', password: 'any_password' });
   });
 });
