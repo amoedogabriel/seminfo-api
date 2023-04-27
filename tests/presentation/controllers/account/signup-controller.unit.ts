@@ -88,7 +88,7 @@ describe('SignUpControler', () => {
     expect(httpResponse).toEqual(serverError(new Error()));
   });
 
-  it('Should call SendEmailProvider with correct values', async () => {
+  it('Should call SendEmail with correct values', async () => {
     const { sut, sendEmail } = makeSut();
     const sendSpy = jest.spyOn(sendEmail, 'send');
     await sut.handle({ body: { email: 'valid_email@mail.com' } });
