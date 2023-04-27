@@ -17,10 +17,17 @@ const makeSut = (): SutTypes => {
 };
 
 describe('ServiceSendEmail', () => {
-  it('Should call SendEmailProvider with correct values ', async () => {
+  it('Should call SendEmailProvider with correct values', async () => {
     const { sut, sendEmail } = makeSut();
     const sendEmailSpy = jest.spyOn(sendEmail, 'sendEmail');
     await sut.send({ email: 'valid_email@mail.com', token: 'confirmation_token' });
     expect(sendEmailSpy).toHaveBeenCalledWith({ email: 'valid_email@mail.com', token: 'confirmation_token' });
+  });
+
+  it('Should throw if SendEmailProvider throws', async () => {
+    const { sut, sendEmail } = makeSut();
+    jest.spyOn(sendEmail, 'sendEmail').mockReturnValueOnce(Promise.reject(new Error()));
+    const response = sut.send({ email: 'valid_email@mail.com', token: 'confirmation_token' });
+    expect(response).rejects.toEqual(new Error());
   });
 });
