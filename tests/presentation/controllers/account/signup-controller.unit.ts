@@ -1,5 +1,5 @@
 import { AddAccount } from '@domain/use-cases/account';
-import { SetEmailConfirmationToken } from '@domain/use-cases/mail';
+import { SendEmail, SetEmailConfirmationToken } from '@domain/use-cases/mail';
 import { SignUpControler } from '@presentation/controllers/account/signup-controller';
 import { MissingParamError, EmailInUseError } from '@presentation/errors';
 import { serverError, badRequest, forbidden, noContent } from '@presentation/helper/http/http-helper';
@@ -7,20 +7,23 @@ import { Validation } from '@presentation/protocols';
 import { makeFakeAccountRequest } from '@tests/helper/account';
 import { AddAccountStub, ValidationStub } from '@tests/presentation/test/account';
 import { SetEmailConfirmationStub } from '@tests/presentation/test/mail';
+import { SendEmailStub } from '@tests/presentation/test/mail/mock-send-email';
 
 type SutTypes = {
   sut: SignUpControler;
   addAccount: AddAccount;
   validation: Validation;
-  sendEmailConfirmation: SetEmailConfirmationToken;
+  setEmailConfirmation: SetEmailConfirmationToken;
+  sendEmail: SendEmail;
 };
 
 const makeSut = (): SutTypes => {
   const addAccount = new AddAccountStub();
   const validation = new ValidationStub();
-  const sendEmailConfirmation = new SetEmailConfirmationStub();
-  const sut = new SignUpControler(addAccount, validation, sendEmailConfirmation);
-  return { sut, addAccount, validation, sendEmailConfirmation };
+  const setEmailConfirmation = new SetEmailConfirmationStub();
+  const sendEmail = new SendEmailStub();
+  const sut = new SignUpControler(addAccount, validation, setEmailConfirmation, sendEmail);
+  return { sut, addAccount, validation, setEmailConfirmation, sendEmail };
 };
 
 describe('SignUpControler', () => {
@@ -65,9 +68,9 @@ describe('SignUpControler', () => {
     expect(account).toEqual(forbidden(new EmailInUseError()));
   });
 
-  it('Should call SendEmailConfirmation with correct value', async () => {
-    const { sut, sendEmailConfirmation } = makeSut();
-    const loadByEmailSpy = jest.spyOn(sendEmailConfirmation, 'set');
+  it('Should call SetEmailConfirmation with correct value', async () => {
+    const { sut, setEmailConfirmation } = makeSut();
+    const loadByEmailSpy = jest.spyOn(setEmailConfirmation, 'set');
     await sut.handle({ body: { email: 'valid_email@mail.com' } });
     expect(loadByEmailSpy).toHaveBeenCalledWith('valid_email@mail.com');
   });
@@ -78,10 +81,17 @@ describe('SignUpControler', () => {
     expect(httpResponse).toEqual(noContent());
   });
 
-  it('Should return 500 if SendEmailConfirmation throws', async () => {
-    const { sut, sendEmailConfirmation } = makeSut();
-    jest.spyOn(sendEmailConfirmation, 'set').mockReturnValueOnce(Promise.reject(serverError(new Error())));
+  it('Should return 500 if SetEmailConfirmation throws', async () => {
+    const { sut, setEmailConfirmation } = makeSut();
+    jest.spyOn(setEmailConfirmation, 'set').mockReturnValueOnce(Promise.reject(serverError(new Error())));
     const httpResponse = await sut.handle({ body: { email: 'valid_email@mail.com' } });
     expect(httpResponse).toEqual(serverError(new Error()));
+  });
+
+  it('Should call SendEmailProvider with correct values', async () => {
+    const { sut, sendEmail } = makeSut();
+    const sendSpy = jest.spyOn(sendEmail, 'send');
+    await sut.handle({ body: { email: 'valid_email@mail.com' } });
+    expect(sendSpy).toHaveBeenCalledWith('valid_email@mail.com');
   });
 });
