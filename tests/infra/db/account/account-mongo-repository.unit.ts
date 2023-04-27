@@ -1,14 +1,14 @@
-import { AccountMongoRepository } from "@infra/db/account";
-import { MongoHelper } from "@infra/helper";
-import { makeFakeAddAccountData } from "@tests/helper/account";
-import { Collection } from "mongodb";
-
+import { AccountMongoRepository } from '@infra/db/account';
+import { MongoHelper } from '@infra/helper';
+import { makeFakeAddAccountData } from '@tests/helper/account';
+import mongoEnv from '@main/config/mongo-env';
+import { Collection } from 'mongodb';
 
 let accountCollection: Collection;
 
 describe('AccountMongoRepository', () => {
   beforeAll(async () => {
-    await MongoHelper.connect('mongodb://root:root@localhost:27017/');
+    await MongoHelper.connect(mongoEnv.mongoURL);
   });
 
   afterAll(async () => {

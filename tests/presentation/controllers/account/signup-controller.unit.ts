@@ -92,6 +92,6 @@ describe('SignUpControler', () => {
     const { sut, sendEmail } = makeSut();
     const sendSpy = jest.spyOn(sendEmail, 'send');
     await sut.handle({ body: { email: 'valid_email@mail.com' } });
-    expect(sendSpy).toHaveBeenCalledWith('valid_email@mail.com');
+    expect(sendSpy).toHaveBeenCalledWith({ email: 'valid_email@mail.com', token: 'confirmation_token' });
   });
 });

@@ -3,9 +3,10 @@ import { SendEmailModel } from '@domain/models/mail/send-email';
 import nodemailer from 'nodemailer';
 import env from '@main/config/mail-env';
 
+const { host, port, secure, user, pass, from } = env;
+
 export class MailNodeMailerProvider implements SendEmailProvider {
   async sendEmail(data: SendEmailModel): Promise<void> {
-    const { host, port, secure, user, pass, from } = env;
     const transporter = nodemailer.createTransport({
       host: host,
       port: +port,

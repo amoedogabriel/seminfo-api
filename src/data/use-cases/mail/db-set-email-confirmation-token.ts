@@ -12,10 +12,12 @@ export class DbSetEmailConfirmationToken implements SetEmailConfirmationToken {
     this.loadAccountByEmailRepository = loadAccountByEmailRepository;
     this.setEmailConfirmationTokenRepository = setEmailConfirmationTokenRepository;
   }
-  async set(email: string): Promise<void> {
+  async set(email: string): Promise<string> {
     const account = await this.loadAccountByEmailRepository.loadByEmail(email);
     if (account) {
-      await this.setEmailConfirmationTokenRepository.setToken(email);
+      const token = await this.setEmailConfirmationTokenRepository.setToken(email);
+      return token;
     }
+    return null;
   }
 }
