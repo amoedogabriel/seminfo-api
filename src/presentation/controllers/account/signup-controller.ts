@@ -31,8 +31,8 @@ export class SignUpControler implements Controller {
       if (!account) {
         return forbidden(new EmailInUseError());
       }
-      await this.setEmailConfirmation.set(email);
-      await this.sendEmail.send(email);
+      const token = await this.setEmailConfirmation.set(email);
+      await this.sendEmail.send({ email, token });
       return noContent();
     } catch (error) {
       return serverError(error);
