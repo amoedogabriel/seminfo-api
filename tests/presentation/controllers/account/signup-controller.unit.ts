@@ -13,17 +13,17 @@ type SutTypes = {
   sut: SignUpControler;
   addAccount: AddAccount;
   validation: Validation;
-  setEmailConfirmation: SetToken;
+  setToken: SetToken;
   sendEmail: SendEmail;
 };
 
 const makeSut = (): SutTypes => {
   const addAccount = new AddAccountStub();
   const validation = new ValidationStub();
-  const setEmailConfirmation = new SetEmailConfirmationStub();
+  const setToken = new SetEmailConfirmationStub();
   const sendEmail = new SendEmailStub();
-  const sut = new SignUpControler(addAccount, validation, setEmailConfirmation, sendEmail);
-  return { sut, addAccount, validation, setEmailConfirmation, sendEmail };
+  const sut = new SignUpControler(addAccount, validation, setToken, sendEmail);
+  return { sut, addAccount, validation, setToken, sendEmail };
 };
 
 describe('SignUpControler', () => {
@@ -68,22 +68,16 @@ describe('SignUpControler', () => {
     expect(account).toEqual(forbidden(new EmailInUseError()));
   });
 
-  it('Should call SetEmailConfirmation with correct value', async () => {
-    const { sut, setEmailConfirmation } = makeSut();
-    const loadByEmailSpy = jest.spyOn(setEmailConfirmation, 'set');
+  it('Should call SetToken with correct value', async () => {
+    const { sut, setToken } = makeSut();
+    const loadByEmailSpy = jest.spyOn(setToken, 'set');
     await sut.handle({ body: { email: 'valid_email@mail.com' } });
     expect(loadByEmailSpy).toHaveBeenCalledWith('valid_email@mail.com');
   });
 
-  it('Should return 204 if SendEmailConfirmation succeeds', async () => {
-    const { sut } = makeSut();
-    const httpResponse = await sut.handle(makeFakeAccountRequest());
-    expect(httpResponse).toEqual(noContent());
-  });
-
-  it('Should return 500 if SetEmailConfirmation throws', async () => {
-    const { sut, setEmailConfirmation } = makeSut();
-    jest.spyOn(setEmailConfirmation, 'set').mockReturnValueOnce(Promise.reject(serverError(new Error())));
+  it('Should return 500 if SetToken throws', async () => {
+    const { sut, setToken } = makeSut();
+    jest.spyOn(setToken, 'set').mockReturnValueOnce(Promise.reject(serverError(new Error())));
     const httpResponse = await sut.handle({ body: { email: 'valid_email@mail.com' } });
     expect(httpResponse).toEqual(serverError(new Error()));
   });
@@ -93,5 +87,18 @@ describe('SignUpControler', () => {
     const sendSpy = jest.spyOn(sendEmail, 'send');
     await sut.handle({ body: { email: 'valid_email@mail.com' } });
     expect(sendSpy).toHaveBeenCalledWith({ email: 'valid_email@mail.com', token: 'confirmation_token' });
+  });
+
+  it('Should return 500 if SendEmail throws', async () => {
+    const { sut, sendEmail } = makeSut();
+    jest.spyOn(sendEmail, 'send').mockReturnValueOnce(Promise.reject(serverError(new Error())));
+    const httpResponse = await sut.handle({ body: { email: 'valid_email@mail.com' } });
+    expect(httpResponse).toEqual(serverError(new Error()));
+  });
+
+  it('Should return 204 if SendEmail succeeds', async () => {
+    const { sut } = makeSut();
+    const httpResponse = await sut.handle(makeFakeAccountRequest());
+    expect(httpResponse).toEqual(noContent());
   });
 });
