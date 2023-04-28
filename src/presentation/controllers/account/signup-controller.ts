@@ -1,5 +1,5 @@
 import { AddAccount } from '@domain/use-cases/account';
-import { SendEmail, SetEmailConfirmationToken } from '@domain/use-cases/mail';
+import { SendEmail, SetToken } from '@domain/use-cases/mail';
 import { EmailInUseError } from '@presentation/errors';
 import { badRequest, forbidden, noContent, serverError } from '@presentation/helper/http/http-helper';
 import { Controller, Validation, HttpRequest, HttpResponse } from '@presentation/protocols';
@@ -7,17 +7,12 @@ import { Controller, Validation, HttpRequest, HttpResponse } from '@presentation
 export class SignUpControler implements Controller {
   private readonly addAccount: AddAccount;
   private readonly validation: Validation;
-  private readonly setEmailConfirmation: SetEmailConfirmationToken;
+  private readonly setToken: SetToken;
   private readonly sendEmail: SendEmail;
-  constructor(
-    addAccount: AddAccount,
-    validation: Validation,
-    setEmailConfirmation: SetEmailConfirmationToken,
-    sendEmail: SendEmail
-  ) {
+  constructor(addAccount: AddAccount, validation: Validation, setToken: SetToken, sendEmail: SendEmail) {
     this.addAccount = addAccount;
     this.validation = validation;
-    this.setEmailConfirmation = setEmailConfirmation;
+    this.setToken = setToken;
     this.sendEmail = sendEmail;
   }
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -31,8 +26,10 @@ export class SignUpControler implements Controller {
       if (!account) {
         return forbidden(new EmailInUseError());
       }
-      const token = await this.setEmailConfirmation.set(email);
-      await this.sendEmail.send({ email, token });
+      const token = await this.setToken.set(email);
+      if (token) {
+        await this.sendEmail.send({ email, token });
+      }
       return noContent();
     } catch (error) {
       return serverError(error);
