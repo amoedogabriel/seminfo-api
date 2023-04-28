@@ -1,5 +1,5 @@
 import { AddAccount } from '@domain/use-cases/account';
-import { SendEmail, SetEmailConfirmationToken } from '@domain/use-cases/mail';
+import { SendEmail, SetToken } from '@domain/use-cases/mail';
 import { SignUpControler } from '@presentation/controllers/account/signup-controller';
 import { MissingParamError, EmailInUseError } from '@presentation/errors';
 import { serverError, badRequest, forbidden, noContent } from '@presentation/helper/http/http-helper';
@@ -13,7 +13,7 @@ type SutTypes = {
   sut: SignUpControler;
   addAccount: AddAccount;
   validation: Validation;
-  setEmailConfirmation: SetEmailConfirmationToken;
+  setEmailConfirmation: SetToken;
   sendEmail: SendEmail;
 };
 

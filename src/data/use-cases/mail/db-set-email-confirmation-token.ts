@@ -1,8 +1,8 @@
 import { LoadAccountByEmailRepository } from '@data/protocols/db/account';
 import { SetEmailConfirmationTokenRepository } from '@data/protocols/db/mail';
-import { SetEmailConfirmationToken } from '@domain/use-cases/mail';
+import { SetToken } from '@domain/use-cases/mail';
 
-export class DbSetEmailConfirmationToken implements SetEmailConfirmationToken {
+export class DbSetEmailConfirmationToken implements SetToken {
   private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository;
   private readonly setEmailConfirmationTokenRepository: SetEmailConfirmationTokenRepository;
   constructor(
